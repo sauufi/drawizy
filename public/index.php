@@ -46,7 +46,12 @@ $router->add('GET', '/admin/pages/delete/{id}', [PageController::class, 'delete'
 $router->add('GET', '/admin/pages/edit/{id}', [PageController::class, 'edit'], [Role::class, 'adminOnly']);
 $router->add('POST', '/admin/pages/update/{id}', [PageController::class, 'update'], [Role::class, 'adminOnly']);
 
-// Editor role
+// API routes for admin
+$router->add('GET', '/admin/categories/children/(\d+)', [CategoryController::class, 'getChildren'], [Role::class, 'editorOrAdmin']);
+$router->add('GET', '/admin/categories/search', [CategoryController::class, 'search'], [Role::class, 'editorOrAdmin']);
+$router->add('POST', '/admin/categories/sort-order', [CategoryController::class, 'updateSortOrder'], [Role::class, 'editorOrAdmin']);
+
+// Keep existing admin category management routes
 $router->add('GET', '/admin/categories', [CategoryController::class, 'index'], [Role::class, 'editorOrAdmin']);
 $router->add('GET', '/admin/categories/create', [CategoryController::class, 'create'], [Role::class, 'editorOrAdmin']);
 $router->add('POST', '/admin/categories/store', [CategoryController::class, 'store'], [Role::class, 'editorOrAdmin']);
@@ -72,7 +77,14 @@ $router->add('GET', '/{slug}', [PageController::class, 'show']);
 // Frontend
 $router->add('GET', '/', [ImageController::class, 'home']);
 $router->add('GET', '/image/([\w-]+)', [ImageController::class, 'detail']);
-$router->add('GET', '/category/([\w-]+)', [CategoryController::class, 'show']);
+// $router->add('GET', '/category/([\w-]+)', [CategoryController::class, 'show']);
 $router->add('GET', '/download/(\d+)', [ImageController::class, 'download']);
+
+// Single category (parent or child): /animals or /cats  
+$router->add('GET', '/category/([\w-]+)', [CategoryController::class, 'show']);
+
+// Parent/Child category: /animals/cats
+$router->add('GET', '/([\w-]+)/([\w-]+)', [CategoryController::class, 'showChild']);
+
 
 $router->run();
