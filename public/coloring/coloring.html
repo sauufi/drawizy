@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎨 Kids Coloring Fun! 🌈</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700&display=swap');
+    
+    .fun-font { font-family: 'Fredoka One', cursive; }
+    .cute-font { font-family: 'Nunito', sans-serif; }
+    
+    .bounce-btn {
+      transition: all 0.2s ease;
+    }
+    .bounce-btn:hover {
+      transform: scale(1.1);
+    }
+    .bounce-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .rainbow-bg {
+      background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+      background-size: 200% 200%;
+      animation: rainbow 3s ease infinite;
+    }
+    
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .wiggle {
+      animation: wiggle 2s ease-in-out infinite;
+    }
+    
+    @keyframes wiggle {
+      0%, 7% { transform: rotateZ(0); }
+      15% { transform: rotateZ(-15deg); }
+      20% { transform: rotateZ(10deg); }
+      25% { transform: rotateZ(-10deg); }
+      30% { transform: rotateZ(6deg); }
+      35% { transform: rotateZ(-4deg); }
+      40%, 100% { transform: rotateZ(0); }
+    }
+    
+    .sparkle {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .sparkle::before {
+      content: '✨';
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      font-size: 12px;
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="rainbow-bg min-h-screen p-4">
+  
+  <!-- Header -->
+  <div class="text-center mb-6">
+    <h1 class="fun-font text-4xl md:text-6xl text-white drop-shadow-lg wiggle">
+      🎨 Kids Coloring Fun! 🌈
+    </h1>
+    <p class="cute-font text-xl text-white drop-shadow-md mt-2">
+      Let your imagination run wild with colors! ✨
+    </p>
+  </div>
+
+  <div class="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto">
+    
+    <!-- Fun Control Panel -->
+    <div class="order-2 lg:order-1 lg:w-80 bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-yellow-300">
+      
+      <!-- Action Buttons -->
+      <div class="mb-6">
+        <h3 class="fun-font text-2xl text-purple-600 mb-4 text-center">🛠️ Magic Tools</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="undo()" class="bounce-btn p-3 bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white rounded-2xl shadow-lg cute-font font-bold text-sm flex items-center justify-center gap-2">
+            ↶ Undo
+          </button>
+          <button onclick="redo()" class="bounce-btn p-3 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white rounded-2xl shadow-lg cute-font font-bold text-sm flex items-center justify-center gap-2">
+            ↷ Redo
+          </button>
+          <button onclick="clearCanvas()" class="bounce-btn p-3 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white rounded-2xl shadow-lg cute-font font-bold text-sm flex items-center justify-center gap-2">
+            🗑️ Clear
+          </button>
+          <button onclick="setEraser()" class="bounce-btn p-3 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white rounded-2xl shadow-lg cute-font font-bold text-sm flex items-center justify-center gap-2">
+            🧽 Eraser
+          </button>
+          <button onclick="saveImage()" class="bounce-btn p-3 bg-gradient-to-r from-purple-400 to-purple-600 hover:from-purple-500 hover:to-purple-700 text-white rounded-2xl shadow-lg cute-font font-bold text-sm flex items-center justify-center gap-2 sparkle">
+            💾 Save
+          </button>
+          <button onclick="printImage()" class="bounce-btn p-3 bg-gradient-to-r from-indigo-400 to-indigo-600 hover:from-indigo-500 hover:to-indigo-700 text-white rounded-2xl shadow-lg cute-font font-bold text-sm flex items-center justify-center gap-2">
+            🖨️ Print
+          </button>
+        </div>
+      </div>
+
+      <!-- Color Palette -->
+      <div class="mb-6">
+        <h3 class="fun-font text-2xl text-pink-600 mb-4 text-center">🌈 Color Magic</h3>
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn transform" style="background: linear-gradient(45deg, #ff6b6b, #ff8a80)" onclick="setColor('#ff6b6b')"></button>
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn" style="background: linear-gradient(45deg, #ffd93d, #ffeb3b)" onclick="setColor('#ffd93d')"></button>
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn" style="background: linear-gradient(45deg, #6bcf7f, #81c784)" onclick="setColor('#6bcf7f')"></button>
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn" style="background: linear-gradient(45deg, #4ecdc4, #4db6ac)" onclick="setColor('#4ecdc4')"></button>
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn" style="background: linear-gradient(45deg, #45b7d1, #64b5f6)" onclick="setColor('#45b7d1')"></button>
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn" style="background: linear-gradient(45deg, #9c88ff, #b39ddb)" onclick="setColor('#9c88ff')"></button>
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn" style="background: linear-gradient(45deg, #ff8a65, #ffab91)" onclick="setColor('#ff8a65')"></button>
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn" style="background: linear-gradient(45deg, #f06292, #f48fb1)" onclick="setColor('#f06292')"></button>
+          <button class="w-full h-12 rounded-2xl shadow-lg border-4 border-white hover:border-yellow-300 bounce-btn" style="background: linear-gradient(45deg, #26a69a, #4db6ac)" onclick="setColor('#26a69a')"></button>
+        </div>
+        
+        <!-- Custom Color Picker -->
+        <div class="flex items-center gap-3 mb-4">
+          <label class="cute-font font-bold text-purple-600">🎨 Pick Color:</label>
+          <input type="color" id="colorPicker" value="#000000" class="w-16 h-12 border-4 border-purple-300 rounded-2xl shadow-lg cursor-pointer">
+        </div>
+      </div>
+
+      <!-- Brush Settings -->
+      <div class="mb-6">
+        <h3 class="fun-font text-2xl text-green-600 mb-4 text-center">🖌️ Brush Magic</h3>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="cute-font font-bold text-gray-700 flex items-center gap-2 mb-2">
+              📏 Brush Size: <span id="brushSizeValue" class="text-purple-600">50</span>
+            </label>
+            <input id="brushSize" type="range" min="1" max="100" value="50" class="w-full h-3 bg-gradient-to-r from-pink-300 to-purple-400 rounded-full appearance-none cursor-pointer">
+          </div>
+          
+          <div>
+            <label class="cute-font font-bold text-gray-700 flex items-center gap-2 mb-2">
+              💧 Opacity: <span id="opacityValue" class="text-purple-600">100%</span>
+            </label>
+            <input id="opacitySlider" type="range" min="0.1" max="1" step="0.1" value="1" class="w-full h-3 bg-gradient-to-r from-blue-300 to-cyan-400 rounded-full appearance-none cursor-pointer">
+          </div>
+          
+          <div>
+            <label class="cute-font font-bold text-gray-700 flex items-center gap-2 mb-2">
+              ✏️ Brush Type:
+            </label>
+            <select id="brushType" class="w-full p-3 border-3 border-purple-300 rounded-2xl cute-font font-bold text-purple-600 bg-white shadow-lg focus:border-pink-400 focus:outline-none">
+              <option value="pencil">✏️ Pencil</option>
+              <option value="brush">🖌️ Paint Brush</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fun Encouragement -->
+      <div class="bg-gradient-to-r from-pink-200 to-purple-200 rounded-2xl p-4 text-center">
+        <p class="fun-font text-lg text-purple-700">
+          Keep coloring! <br>You're doing amazing! 🌟
+        </p>
+      </div>
+    </div>
+
+    <!-- Canvas Area -->
+    <div class="order-1 lg:order-2 flex-1 flex justify-center items-center">
+      <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-pink-300 max-w-2xl w-full">
+        <h3 class="fun-font text-3xl text-center text-orange-600 mb-4">🎨 Your Masterpiece! 🖼️</h3>
+        <div class="relative mx-auto w-full" style="max-width:600px;">
+          <div class="canvas-container relative w-full" style="aspect-ratio:3/4;">
+            <canvas id="paintCanvas" class="absolute top-0 left-0 w-full h-full border-4 border-rainbow-400 rounded-2xl bg-white touch-none shadow-xl"></canvas>
+            <canvas id="outlineCanvas" class="absolute top-0 left-0 w-full h-full pointer-events-none rounded-2xl"></canvas>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <p class="cute-font text-lg text-gray-600">
+            🌟 Tap and drag to color! Have fun! 🌟
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+    const paintCanvas = document.getElementById('paintCanvas');
+    const outlineCanvas = document.getElementById('outlineCanvas');
+    const paintCtx = paintCanvas.getContext('2d');
+    const outlineCtx = outlineCanvas.getContext('2d');
+
+    // Outline from URL parameter
+    let outlineImage = new Image();
+    const params = new URLSearchParams(window.location.search);
+    const imageParam = params.get('image') || 'outline.png';
+    outlineImage.src = imageParam;
+    outlineImage.onload = () => {
+      outlineCtx.drawImage(outlineImage, 0, 0, outlineCanvas.width, outlineCanvas.height);
+    };
+    
+    function resizeCanvas() {
+        const container = document.querySelector('.canvas-container');
+        if (!container) return;
+        
+        const rect = container.getBoundingClientRect();
+
+        // Simpan isi lama sebagai gambar
+        const temp = document.createElement('canvas');
+        temp.width = paintCanvas.width;
+        temp.height = paintCanvas.height;
+        if (paintCanvas.width > 0 && paintCanvas.height > 0) {
+            temp.getContext('2d').drawImage(paintCanvas, 0, 0);
+        }
+
+        // Set ukuran canvas ke resolusi tinggi (1200x1600) untuk kualitas gambar yang tajam
+        paintCanvas.width = 1200;
+        paintCanvas.height = 1600;
+        outlineCanvas.width = 1200;
+        outlineCanvas.height = 1600;
+
+        // Isi background putih & gambar ulang isi lama
+        paintCtx.fillStyle = 'white';
+        paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
+
+        // Skala ulang isi lama ke ukuran baru
+        if (temp.width > 0 && temp.height > 0) {
+            paintCtx.drawImage(temp, 0, 0, paintCanvas.width, paintCanvas.height);
+        }
+
+        // Gambar ulang outline
+        if (outlineImage.complete) {
+            outlineCtx.drawImage(outlineImage, 0, 0, outlineCanvas.width, outlineCanvas.height);
+        }
+        
+        // Force browser to recalculate canvas bounds
+        setTimeout(() => {
+            paintCanvas.getBoundingClientRect();
+        }, 100);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    let drawing = false, color = '#ff6b6b', brushSize = 50, opacity = 1.0, lastX = 0, lastY = 0;
+    let undoStack = [], redoStack = [];
+    
+    // Update slider displays
+    document.getElementById('brushSize').addEventListener('input', e => {
+      brushSize = e.target.value;
+      document.getElementById('brushSizeValue').textContent = brushSize;
+    });
+    
+    document.getElementById('opacitySlider').addEventListener('input', e => {
+      opacity = parseFloat(e.target.value);
+      document.getElementById('opacityValue').textContent = Math.round(opacity * 100) + '%';
+    });
+    
+    function pushState() {
+      undoStack.push(paintCanvas.toDataURL());
+      if (undoStack.length > 20) undoStack.shift();
+      redoStack = [];
+    }
+    
+    function undo() { 
+      if (!undoStack.length) return; 
+      redoStack.push(paintCanvas.toDataURL()); 
+      loadImage(undoStack.pop()); 
+    }
+    
+    function redo() { 
+      if (!redoStack.length) return; 
+      undoStack.push(paintCanvas.toDataURL()); 
+      loadImage(redoStack.pop()); 
+    }
+    
+    function loadImage(src) {
+      const img = new Image(); 
+      img.src = src;
+      img.onload = () => { 
+        paintCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height); 
+        paintCtx.fillStyle = 'white';
+        paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
+        paintCtx.drawImage(img, 0, 0); 
+      };
+    }
+    
+    function clearCanvas() { 
+      pushState(); 
+      paintCtx.fillStyle = 'white'; 
+      paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height); 
+    }
+    
+    function setColor(c) { 
+      color = c; 
+    }
+    
+    document.getElementById('colorPicker').addEventListener('input', e => setColor(e.target.value));
+    
+    function setEraser() { 
+      color = 'white'; 
+    }
+    
+    function saveImage() {
+      const finalCanvas = mergeCanvases();
+      const link = document.createElement('a');
+      link.download = 'my-awesome-coloring.png';
+      link.href = finalCanvas.toDataURL();
+      link.click();
+      
+      // Fun feedback
+      const button = event.target;
+      const originalText = button.innerHTML;
+      button.innerHTML = '✅ Saved!';
+      setTimeout(() => {
+        button.innerHTML = originalText;
+      }, 2000);
+    }
+    
+    function printImage() {
+        const finalCanvas = mergeCanvases();
+        const dataUrl = finalCanvas.toDataURL();
+        const printWin = window.open('', '_blank');
+        if (printWin) {
+            printWin.document.write(`
+            <html>
+            <head><title>My Coloring Masterpiece! 🎨</title></head>
+            <body style="margin:0;display:flex;justify-content:center;align-items:center;height:100vh;background:linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f);">
+                <img src="${dataUrl}" style="max-width:100%;max-height:100%;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.3);" 
+                    onload="window.print();window.onafterprint = () => window.close();">
+            </body>
+            </html>
+            `);
+            printWin.document.close();
+        } else {
+            alert('🚫 Oops! Please allow pop-ups to print your masterpiece! 🎨');
+        }
+    }
+    
+    function mergeCanvases() {
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = paintCanvas.width;
+      finalCanvas.height = paintCanvas.height;
+      const finalCtx = finalCanvas.getContext('2d');
+      finalCtx.fillStyle = 'white';
+      finalCtx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      finalCtx.drawImage(paintCanvas, 0, 0);
+      finalCtx.drawImage(outlineCanvas, 0, 0);
+      return finalCanvas;
+    }
+    
+    // === Unified position function ===
+    function getPointerPos(e) {
+      const rect = paintCanvas.getBoundingClientRect();
+      const scaleX = paintCanvas.width / rect.width;
+      const scaleY = paintCanvas.height / rect.height;
+      
+      let clientX, clientY;
+      
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else if (e.changedTouches && e.changedTouches.length > 0) {
+        clientX = e.changedTouches[0].clientX;
+        clientY = e.changedTouches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+      };
+    }
+    
+    // --- Event pointer universal ---
+    // Disable default touch behaviors
+    paintCanvas.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+    paintCanvas.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+    paintCanvas.addEventListener('touchend', e => e.preventDefault(), { passive: false });
+    
+    // Pointer events for all devices
+    paintCanvas.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      const pos = getPointerPos(e);
+      startDraw(pos);
+    });
+    
+    paintCanvas.addEventListener('pointermove', e => {
+      e.preventDefault();
+      if (drawing) {
+        const pos = getPointerPos(e);
+        draw(pos);
+      }
+    });
+    
+    paintCanvas.addEventListener('pointerup', e => {
+      e.preventDefault();
+      stopDraw();
+    });
+    
+    paintCanvas.addEventListener('pointerleave', stopDraw);
+    paintCanvas.addEventListener('pointercancel', stopDraw);
+    
+    // Fallback touch events for better mobile support
+    paintCanvas.addEventListener('touchstart', e => {
+      const pos = getPointerPos(e);
+      startDraw(pos);
+    }, { passive: false });
+    
+    paintCanvas.addEventListener('touchmove', e => {
+      if (drawing) {
+        const pos = getPointerPos(e);
+        draw(pos);
+      }
+    }, { passive: false });
+    
+    paintCanvas.addEventListener('touchend', stopDraw, { passive: false });
+    
+    // Mouse events for desktop
+    paintCanvas.addEventListener('mousedown', e => {
+      const pos = getPointerPos(e);
+      startDraw(pos);
+    });
+    
+    paintCanvas.addEventListener('mousemove', e => {
+      if (drawing) {
+        const pos = getPointerPos(e);
+        draw(pos);
+      }
+    });
+    
+    paintCanvas.addEventListener('mouseup', stopDraw);
+    paintCanvas.addEventListener('mouseleave', stopDraw);
+    
+    function startDraw(pos) { 
+      drawing = true; 
+      pushState(); 
+      lastX = pos.x; 
+      lastY = pos.y;
+      
+      // Draw a dot for single taps
+      paintCtx.globalAlpha = opacity;
+      paintCtx.fillStyle = color;
+      paintCtx.beginPath();
+      paintCtx.arc(pos.x, pos.y, brushSize / 2, 0, Math.PI * 2);
+      paintCtx.fill();
+    }
+    
+    function stopDraw() { 
+      drawing = false; 
+    }
+    
+    function draw(pos) {
+      if (!drawing) return;
+      const brushType = document.getElementById('brushType').value;
+      
+      if (brushType === "pencil") {
+        paintCtx.globalAlpha = opacity;
+        paintCtx.strokeStyle = color;
+        paintCtx.lineWidth = brushSize;
+        paintCtx.lineCap = 'round';
+        paintCtx.lineJoin = 'round';
+        paintCtx.beginPath();
+        paintCtx.moveTo(lastX, lastY);
+        paintCtx.lineTo(pos.x, pos.y);
+        paintCtx.stroke();
+      } else {
+        const dx = pos.x - lastX;
+        const dy = pos.y - lastY;
+        const angle = Math.atan2(dy, dx);
+        const steps = Math.floor(Math.hypot(dx, dy) / 2);
+
+        for (let i = 0; i < steps; i++) {
+            const t = i / steps;
+            const xPos = lastX + dx * t;
+            const yPos = lastY + dy * t;
+
+            for (let s = -2; s <= 2; s++) {
+                const offset = s * (brushSize * 0.15);
+                const jitter = (Math.random() - 0.5) * brushSize * 0.1;
+                const ox = Math.cos(angle + Math.PI/2) * offset + jitter;
+                const oy = Math.sin(angle + Math.PI/2) * offset + jitter;
+
+                paintCtx.globalAlpha = opacity * (0.3 + Math.random() * 0.2);
+                paintCtx.strokeStyle = color;
+                paintCtx.lineWidth = (brushSize * 0.2) + Math.random() * (brushSize * 0.1);
+                paintCtx.lineCap = 'round';
+                paintCtx.beginPath();
+                paintCtx.moveTo(xPos + ox, yPos + oy);
+                paintCtx.lineTo(xPos + ox + 0.1, yPos + oy + 0.1);
+                paintCtx.stroke();
+            }
+        }
+        paintCtx.globalAlpha = 1.0;
+      }
+      lastX = pos.x; 
+      lastY = pos.y;
+    }
+    
+    // Fun sound effects (optional - can be enabled)
+    function playSound(type) {
+      // You can add sound effects here for even more fun!
+      // For now, just visual feedback
+    }
+    
+    // Add some sparkle effects when painting
+    function addSparkle(x, y) {
+      const sparkle = document.createElement('div');
+      sparkle.innerHTML = '✨';
+      sparkle.style.position = 'absolute';
+      sparkle.style.left = x + 'px';
+      sparkle.style.top = y + 'px';
+      sparkle.style.pointerEvents = 'none';
+      sparkle.style.fontSize = '20px';
+      sparkle.style.animation = 'sparkle 1s ease-out forwards';
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => {
+        document.body.removeChild(sparkle);
+      }, 1000);
+    }
+</script>
+
+</body>
+</html>

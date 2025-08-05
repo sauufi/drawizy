@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Coloring App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+<div class="flex flex-col md:flex-row gap-6 w-full max-w-6xl p-4">
+  
+  <!-- Controls with Icons -->
+  <div class="flex flex-wrap md:flex-col gap-3 w-full md:w-1/5">
+    <button onclick="undo()" class="p-3 bg-gray-200 hover:bg-gray-300 rounded flex justify-center items-center">Undo</button>
+    <button onclick="redo()" class="p-3 bg-gray-200 hover:bg-gray-300 rounded flex justify-center items-center">Redo</button>
+    <button onclick="clearCanvas()" class="p-3 bg-red-200 hover:bg-red-300 rounded flex justify-center items-center">Clear</button>
+    <button onclick="setEraser()" class="p-3 bg-yellow-200 hover:bg-yellow-300 rounded flex justify-center items-center">Eraser</button>
+    <button onclick="saveImage()" class="p-3 bg-green-200 hover:bg-green-300 rounded flex justify-center items-center">Save</button>
+    <button onclick="printImage()" class="p-3 bg-blue-200 hover:bg-blue-300 rounded flex justify-center items-center">Print</button>
+    <div class="flex gap-1 flex-wrap">
+        <button class="w-8 h-8 rounded" style="background:red" onclick="setColor('red')"></button>
+        <button class="w-8 h-8 rounded" style="background:orange" onclick="setColor('orange')"></button>
+        <button class="w-8 h-8 rounded" style="background:yellow" onclick="setColor('yellow')"></button>
+        <button class="w-8 h-8 rounded" style="background:green" onclick="setColor('green')"></button>
+        <button class="w-8 h-8 rounded" style="background:blue" onclick="setColor('blue')"></button>
+        <button class="w-8 h-8 rounded" style="background:purple" onclick="setColor('purple')"></button>
+    </div>
+    <input type="color" id="colorPicker" value="#000000" class="w-12 h-12 border rounded">
+    <label class="flex flex-col gap-1 w-full">
+      <span>Brush Size</span>
+      <input id="brushSize" type="range" min="1" max="50" value="10" class="w-full">
+    </label>
+    <label class="flex flex-col gap-1 w-full">
+      <span>Opacity</span>
+      <input id="opacitySlider" type="range" min="0.1" max="1" step="0.1" value="1" class="w-full">
+    </label>
+    <label class="flex flex-col gap-1 w-full">
+      <span>Brush Type</span>
+      <select id="brushType" class="border rounded px-2 py-1">
+        <option value="pencil">Pencil</option>
+        <option value="brush">Brush</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- Canvas -->
+  <div class="relative flex-1 flex justify-center items-center">
+    <div class="relative" style="width:100%; max-width:600px; aspect-ratio:3/4;">
+      <canvas id="paintCanvas" class="absolute top-0 left-0 w-full h-full border-2 border-gray-400 rounded bg-white touch-none"></canvas>
+      <canvas id="outlineCanvas" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+    const paintCanvas = document.getElementById('paintCanvas');
+    const outlineCanvas = document.getElementById('outlineCanvas');
+    const paintCtx = paintCanvas.getContext('2d');
+    const outlineCtx = outlineCanvas.getContext('2d');
+    
+    function resizeCanvas() {
+      const rect = paintCanvas.getBoundingClientRect();
+      paintCanvas.width = rect.width;
+      paintCanvas.height = rect.height;
+      outlineCanvas.width = rect.width;
+      outlineCanvas.height = rect.height;
+      paintCtx.fillStyle = 'white';
+      paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    let drawing = false, color = 'black', brushSize = 10, opacity = 1.0, lastX = 0, lastY = 0;
+    let undoStack = [], redoStack = [];
+    
+    function pushState() {
+      undoStack.push(paintCanvas.toDataURL());
+      if (undoStack.length > 20) undoStack.shift();
+      redoStack = [];
+    }
+    function undo() { if (!undoStack.length) return; redoStack.push(paintCanvas.toDataURL()); loadImage(undoStack.pop()); }
+    function redo() { if (!redoStack.length) return; undoStack.push(paintCanvas.toDataURL()); loadImage(redoStack.pop()); }
+    function loadImage(src) {
+      const img = new Image(); img.src = src;
+      img.onload = () => { paintCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height); paintCtx.drawImage(img, 0, 0); };
+    }
+    function clearCanvas() { pushState(); paintCtx.fillStyle = 'white'; paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height); }
+    function setColor(c) { color = c; }
+    document.getElementById('colorPicker').addEventListener('input', e => setColor(e.target.value));
+    function setEraser() { color = 'white'; }
+    
+    function saveImage() {
+      const finalCanvas = mergeCanvases();
+      const link = document.createElement('a');
+      link.download = 'coloring.png';
+      link.href = finalCanvas.toDataURL();
+      link.click();
+    }
+    function printImage() {
+        const finalCanvas = mergeCanvases();
+        const dataUrl = finalCanvas.toDataURL();
+        const printWin = window.open('', '_blank');
+        if (printWin) {
+            printWin.document.write(`
+            <html>
+            <head><title>Print</title></head>
+            <body style="margin:0;display:flex;justify-content:center;align-items:center;height:100vh;">
+                <img src="${dataUrl}" style="max-width:100%;max-height:100%;" 
+                    onload="window.print();window.onafterprint = () => window.close();">
+            </body>
+            </html>
+            `);
+            printWin.document.close();
+        } else {
+            alert('Pop-up blocked. Please allow pop-ups for this site to enable printing.');
+        }
+    }
+    function mergeCanvases() {
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = paintCanvas.width;
+      finalCanvas.height = paintCanvas.height;
+      const finalCtx = finalCanvas.getContext('2d');
+      finalCtx.drawImage(paintCanvas, 0, 0);
+      finalCtx.drawImage(outlineCanvas, 0, 0);
+      return finalCanvas;
+    }
+    document.getElementById('brushSize').addEventListener('input', e => brushSize = e.target.value);
+    document.getElementById('opacitySlider').addEventListener('input', e => opacity = parseFloat(e.target.value));
+    
+    // === Unified position function ===
+    function getPointerPos(e) {
+      const rect = paintCanvas.getBoundingClientRect();
+      if (e.touches) {
+        return {
+          x: e.touches[0].clientX - rect.left,
+          y: e.touches[0].clientY - rect.top
+        };
+      } else {
+        return {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top
+        };
+      }
+    }
+    
+    // --- Event pointer universal ---
+    paintCanvas.addEventListener('pointerdown', e => {
+    const pos = getPointerPos(e);
+    startDraw(pos);
+    });
+    paintCanvas.addEventListener('pointermove', e => {
+    if (drawing) draw(getPointerPos(e));
+    });
+    paintCanvas.addEventListener('pointerup', stopDraw);
+    paintCanvas.addEventListener('pointerleave', stopDraw);
+    
+    function startDraw(pos) { drawing = true; pushState(); lastX = pos.x; lastY = pos.y; }
+    function stopDraw() { drawing = false; }
+    function draw(pos) {
+      if (!drawing) return;
+      const brushType = document.getElementById('brushType').value;
+      if (brushType === "pencil") {
+        paintCtx.globalAlpha = opacity;
+        paintCtx.strokeStyle = color;
+        paintCtx.lineWidth = brushSize;
+        paintCtx.lineCap = 'round';
+        paintCtx.beginPath();
+        paintCtx.moveTo(lastX, lastY);
+        paintCtx.lineTo(pos.x, pos.y);
+        paintCtx.stroke();
+      } else {
+        const dx = pos.x - lastX;
+        const dy = pos.y - lastY;
+        const angle = Math.atan2(dy, dx);
+        const steps = Math.floor(Math.hypot(dx, dy) / 2);
+
+        for (let i = 0; i < steps; i++) {
+            const t = i / steps;
+            const xPos = lastX + dx * t;
+            const yPos = lastY + dy * t;
+
+            for (let s = -2; s <= 2; s++) {
+                const offset = s * (brushSize * 0.15);
+                const jitter = (Math.random() - 0.5) * brushSize * 0.1;
+                const ox = Math.cos(angle + Math.PI/2) * offset + jitter;
+                const oy = Math.sin(angle + Math.PI/2) * offset + jitter;
+
+                paintCtx.globalAlpha = opacity * (0.3 + Math.random() * 0.2);
+                paintCtx.strokeStyle = color;
+                paintCtx.lineWidth = (brushSize * 0.2) + Math.random() * (brushSize * 0.1);
+                paintCtx.beginPath();
+                paintCtx.moveTo(xPos + ox, yPos + oy);
+                paintCtx.lineTo(xPos + ox + 0.1, yPos + oy + 0.1); // titik pendek
+                paintCtx.stroke();
+            }
+        }
+        paintCtx.globalAlpha = 1.0;
+      }
+      lastX = pos.x; lastY = pos.y;
+    }
+    
+    // Outline from URL parameter
+    const params = new URLSearchParams(window.location.search);
+    const imageParam = params.get('image') || 'outline.png';
+    const outlineImage = new Image();
+    outlineImage.src = imageParam;
+    outlineImage.onload = () => outlineCtx.drawImage(outlineImage, 0, 0, outlineCanvas.width, outlineCanvas.height);
+    </script>
+    
+</body>
+</html>
