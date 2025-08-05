@@ -4,7 +4,7 @@
         <i class="fas fa-upload text-white text-2xl"></i>
     </div>
     <h1 class="text-3xl font-bold text-gray-800 mb-2">Upload Coloring Pages</h1>
-    <p class="text-gray-600">Add beautiful new coloring pages to your collection! 🎨✨</p>
+    <p class="text-gray-600">Add beautiful new coloring pages with manual tags and proper categorization! 🎨✨</p>
 </div>
 
 <!-- Upload Instructions -->
@@ -28,13 +28,13 @@
                 <p class="text-gray-600">Optional PNG/JPG preview images for each PDF</p>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-md text-center">
-                <div class="text-3xl mb-2">📝</div>
-                <h4 class="font-semibold text-purple-600 mb-2">Auto Naming</h4>
-                <p class="text-gray-600">Titles are generated from PDF filenames automatically</p>
+                <div class="text-3xl mb-2">🏷️</div>
+                <h4 class="font-semibold text-pink-600 mb-2">Manual Tags</h4>
+                <p class="text-gray-600">Custom tags separated by commas for better organization</p>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-md text-center">
                 <div class="text-3xl mb-2">⚡</div>
-                <h4 class="font-semibold text-pink-600 mb-2">Bulk Upload</h4>
+                <h4 class="font-semibold text-orange-600 mb-2">Bulk Upload</h4>
                 <p class="text-gray-600">Upload multiple files at once for efficiency</p>
             </div>
         </div>
@@ -42,17 +42,24 @@
 </div>
 
 <!-- Main Upload Form -->
-<div class="max-w-4xl mx-auto">
+<div class="max-w-6xl mx-auto">
     <div class="bg-white kids-shadow rounded-3xl overflow-hidden border-t-4 border-blue-400">
         <!-- Form Header -->
         <div class="bg-gradient-to-r from-blue-500 to-purple-500 p-6">
-            <div class="flex items-center space-x-3">
-                <div class="bg-white rounded-full p-2">
-                    <i class="fas fa-cloud-upload-alt text-blue-500 text-lg"></i>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white rounded-full p-2">
+                        <i class="fas fa-cloud-upload-alt text-blue-500 text-lg"></i>
+                    </div>
+                    <div class="text-white">
+                        <h2 class="text-xl font-bold">Simplified Upload Form</h2>
+                        <p class="text-blue-100">Add new coloring pages with hierarchical categories and manual tags</p>
+                    </div>
                 </div>
-                <div class="text-white">
-                    <h2 class="text-xl font-bold">Upload Form</h2>
-                    <p class="text-blue-100">Add new coloring pages with PDF and thumbnail files</p>
+                <div class="hidden md:flex space-x-2 text-white opacity-70">
+                    <div class="text-2xl animate-bounce">🎨</div>
+                    <div class="text-2xl animate-pulse">✨</div>
+                    <div class="text-2xl animate-bounce" style="animation-delay: 0.5s;">🌟</div>
                 </div>
             </div>
         </div>
@@ -61,61 +68,171 @@
         <div class="p-8">
             <form method="post" action="/admin/images/multiple" enctype="multipart/form-data" id="uploadForm" class="space-y-8">
 
-                <!-- Category Selection -->
-                <div class="group">
-                    <label class="flex items-center space-x-2 text-gray-700 font-semibold mb-4">
-                        <i class="fas fa-folder text-purple-500 text-lg"></i>
-                        <span class="text-lg">Select Category</span>
-                        <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <select name="category_id" id="categorySelect"
-                            class="w-full border-2 border-gray-200 rounded-2xl p-4 pl-12 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all duration-300 text-lg appearance-none"
-                            required>
-                            <option value="">🎯 Choose a category for your coloring pages...</option>
-                            <?php foreach ($categories as $c): ?>
-                                <option value="<?= $c['id'] ?>">
-                                    <?php
-                                    // Add emoji based on category name
-                                    $name = strtolower($c['name']);
-                                    $emoji = '';
-                                    if (stripos($name, 'animal') !== false) $emoji = '🐾';
-                                    elseif (stripos($name, 'cartoon') !== false) $emoji = '🎭';
-                                    elseif (stripos($name, 'nature') !== false) $emoji = '🌿';
-                                    elseif (stripos($name, 'holiday') !== false) $emoji = '🎉';
-                                    elseif (stripos($name, 'fantasy') !== false) $emoji = '🦄';
-                                    elseif (stripos($name, 'vehicle') !== false) $emoji = '🚗';
-                                    elseif (stripos($name, 'space') !== false) $emoji = '🚀';
-                                    elseif (stripos($name, 'dinosaur') !== false) $emoji = '🦕';
-                                    elseif (stripos($name, 'food') !== false) $emoji = '🍎';
-                                    elseif (stripos($name, 'music') !== false) $emoji = '🎵';
-                                    elseif (stripos($name, 'sport') !== false) $emoji = '⚽';
-                                    elseif (stripos($name, 'people') !== false) $emoji = '👥';
-                                    elseif (stripos($name, 'sea') !== false) $emoji = '🌊';
-                                    elseif (stripos($name, 'insect') !== false) $emoji = '🦋';
-                                    elseif (stripos($name, 'robot') !== false) $emoji = '🤖';
-                                    elseif (stripos($name, 'myth') !== false) $emoji = '⚡';
-                                    elseif (stripos($name, 'farm') !== false) $emoji = '🚜';
-                                    elseif (stripos($name, 'weather') !== false) $emoji = '🌤️';
-                                    elseif (stripos($name, 'mandala') !== false) $emoji = '🔮';
-                                    elseif (stripos($name, 'learning') !== false) $emoji = '📚';
-                                    else $emoji = '🎨';
-                                    ?>
-                                    <?= $emoji ?> <?= htmlspecialchars($c['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
-                            <i class="fas fa-folder text-gray-400 group-focus-within:text-purple-500 transition-colors"></i>
+                <!-- Category Selection Section -->
+                <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border-2 border-dashed border-purple-200">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <i class="fas fa-sitemap text-purple-500 text-lg"></i>
+                        <h3 class="text-lg font-semibold text-gray-700">🗂️ Category Selection</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Parent Category -->
+                        <div class="group">
+                            <label class="flex items-center space-x-2 text-gray-700 font-semibold mb-3">
+                                <i class="fas fa-folder text-purple-500"></i>
+                                <span>Parent Category</span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="parentCategorySelect"
+                                    class="w-full border-2 border-gray-200 rounded-2xl p-4 pl-12 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all duration-300 text-lg appearance-none"
+                                    required onchange="updateChildCategories()">
+                                    <option value="">🎯 Choose a parent category...</option>
+                                    <!-- Parent categories will be populated by PHP -->
+                                    <option value="1" data-slug="animals">🐾 Animals</option>
+                                    <option value="2" data-slug="cartoons">🎭 Cartoons</option>
+                                    <option value="3" data-slug="holidays">🎉 Holidays</option>
+                                    <option value="4" data-slug="learning">📚 Learning</option>
+                                    <option value="5" data-slug="fantasy">🦄 Fantasy</option>
+                                    <option value="6" data-slug="vehicles">🚗 Vehicles</option>
+                                    <option value="7" data-slug="nature">🌿 Nature</option>
+                                    <option value="8" data-slug="dinosaurs">🦕 Dinosaurs</option>
+                                    <option value="9" data-slug="mandalas">🔮 Mandalas</option>
+                                    <option value="10" data-slug="space">🚀 Space</option>
+                                </select>
+                                <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                    <i class="fas fa-folder text-gray-400 group-focus-within:text-purple-500 transition-colors"></i>
+                                </div>
+                                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                    <i class="fas fa-chevron-down text-gray-400"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                            <i class="fas fa-chevron-down text-gray-400"></i>
+
+                        <!-- Child Category -->
+                        <div class="group">
+                            <label class="flex items-center space-x-2 text-gray-700 font-semibold mb-3">
+                                <i class="fas fa-sitemap text-blue-500"></i>
+                                <span>Specific Category</span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select name="category_id" id="childCategorySelect"
+                                    class="w-full border-2 border-gray-200 rounded-2xl p-4 pl-12 focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all duration-300 text-lg appearance-none"
+                                    required disabled>
+                                    <option value="">🎯 First select a parent category...</option>
+                                </select>
+                                <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                    <i class="fas fa-sitemap text-gray-400 group-focus-within:text-blue-500 transition-colors"></i>
+                                </div>
+                                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                    <i class="fas fa-chevron-down text-gray-400"></i>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2 ml-2">
+                                <i class="fas fa-info-circle text-blue-400 mr-1"></i>
+                                Choose the most specific category for better organization
+                            </p>
                         </div>
                     </div>
-                    <p class="text-sm text-gray-500 mt-2 ml-2">
-                        <i class="fas fa-lightbulb text-yellow-400 mr-1"></i>
-                        Choose the category that best fits your coloring pages
-                    </p>
+
+                    <!-- Category Hierarchy Preview -->
+                    <div id="categoryPreview" class="mt-4 hidden">
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-purple-200">
+                            <div class="text-sm text-gray-600 mb-2">Selected Category Path:</div>
+                            <div class="flex items-center space-x-2 text-lg font-semibold" id="categoryPath">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Tags Section -->
+                <div class="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 border-2 border-dashed border-pink-200">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <i class="fas fa-tags text-pink-500 text-lg"></i>
+                        <h3 class="text-lg font-semibold text-gray-700">🏷️ Interactive Tags (Optional)</h3>
+                    </div>
+
+                    <!-- Interactive Tags Input Container -->
+                    <div class="mb-6">
+                        <label class="flex items-center space-x-2 text-gray-700 font-semibold mb-3">
+                            <i class="fas fa-magic text-blue-500"></i>
+                            <span>Add Tags</span>
+                            <span class="text-sm text-gray-500 ml-2">(Press Enter or comma to add)</span>
+                        </label>
+
+                        <!-- Tags Container with Input -->
+                        <div class="relative">
+                            <div id="tagsContainer"
+                                class="min-h-14 w-full border-2 border-gray-200 rounded-2xl p-3 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-100 transition-all duration-300 bg-white cursor-text flex flex-wrap items-center gap-2"
+                                onclick="focusTagInput()">
+
+                                <!-- Tags will be inserted here dynamically -->
+
+                                <!-- Input field inside the container -->
+                                <input type="text"
+                                    id="tagInput"
+                                    class="flex-1 min-w-32 border-0 outline-none bg-transparent text-gray-700 placeholder-gray-400"
+                                    placeholder="Type tags and press Enter or comma..."
+                                    onkeydown="handleTagInput(event)"
+                                    onkeyup="handleTagTyping(event)"
+                                    onpaste="handleTagPaste(event)">
+                            </div>
+
+                            <!-- Hidden input for form submission -->
+                            <input type="hidden" name="manual_tags" id="hiddenTagsInput">
+
+                            <!-- Tag counter -->
+                            <div class="absolute -top-2 right-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full opacity-0 transition-opacity" id="tagCounter">
+                                0 tags
+                            </div>
+                        </div>
+
+                        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <div class="text-sm text-blue-700">
+                                    <i class="fas fa-keyboard text-blue-500 mr-1"></i>
+                                    <strong>Quick Add:</strong> Type and press Enter, comma, or space to add tags instantly!
+                                </div>
+                            </div>
+                            <div class="p-3 bg-green-50 rounded-lg border border-green-200">
+                                <div class="text-sm text-green-700">
+                                    <i class="fas fa-mouse-pointer text-green-500 mr-1"></i>
+                                    <strong>Easy Remove:</strong> Click the × on any tag to remove it quickly!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tag Examples -->
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+                        <h5 class="font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-lightbulb text-purple-500 mr-2"></i>
+                            Tag Examples
+                        </h5>
+                        <div class="text-sm text-gray-600 mb-3">Here are some tag ideas for different categories:</div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+                            <div class="p-2 bg-white rounded-lg">
+                                <strong>Style:</strong> cute, kawaii, detailed, simple, realistic, cartoon
+                            </div>
+                            <div class="p-2 bg-white rounded-lg">
+                                <strong>Difficulty:</strong> easy, beginner, intermediate, detailed, complex
+                            </div>
+                            <div class="p-2 bg-white rounded-lg">
+                                <strong>Age:</strong> toddler, preschool, kids, teens, adults
+                            </div>
+                            <div class="p-2 bg-white rounded-lg">
+                                <strong>Theme:</strong> baby, wild, domestic, magical, futuristic
+                            </div>
+                            <div class="p-2 bg-white rounded-lg">
+                                <strong>Colors:</strong> colorful, black-white, outline, pattern
+                            </div>
+                            <div class="p-2 bg-white rounded-lg">
+                                <strong>Season:</strong> summer, winter, spring, fall, holiday
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SEO Fields -->
@@ -129,28 +246,28 @@
                         <div>
                             <label class="flex items-center space-x-2 text-gray-700 font-semibold mb-3">
                                 <i class="fas fa-heading text-blue-500"></i>
-                                <span>Meta Title</span>
+                                <span>Meta Title Template</span>
                             </label>
                             <input type="text"
                                 name="meta_title"
                                 id="metaTitle"
                                 class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                                placeholder="e.g., Free Animal Coloring Pages for Kids">
-                            <p class="text-xs text-gray-500 mt-1">Will be used for all uploaded images</p>
+                                placeholder="e.g., Free {category} Coloring Pages for Kids">
+                            <p class="text-xs text-gray-500 mt-1">Use {category} as placeholder for category name</p>
                         </div>
 
                         <!-- Meta Description -->
                         <div>
                             <label class="flex items-center space-x-2 text-gray-700 font-semibold mb-3">
                                 <i class="fas fa-align-left text-green-500"></i>
-                                <span>Meta Description</span>
+                                <span>Meta Description Template</span>
                             </label>
                             <textarea name="meta_description"
                                 id="metaDescription"
                                 rows="3"
                                 class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all resize-none"
-                                placeholder="Beautiful coloring pages perfect for kids..."></textarea>
-                            <p class="text-xs text-gray-500 mt-1">Brief description for search engines</p>
+                                placeholder="Beautiful {category} coloring pages perfect for kids..."></textarea>
+                            <p class="text-xs text-gray-500 mt-1">Brief description template for search engines</p>
                         </div>
                     </div>
                 </div>
@@ -285,16 +402,16 @@
 </div>
 
 <!-- Upload Tips -->
-<div class="max-w-4xl mx-auto mt-8">
+<div class="max-w-6xl mx-auto mt-8">
     <div class="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 rounded-2xl p-1">
         <div class="bg-white rounded-xl p-6">
             <div class="flex items-center space-x-3 mb-4">
                 <div class="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2">
                     <i class="fas fa-lightbulb text-white"></i>
                 </div>
-                <h3 class="font-bold text-gray-800">💡 Upload Tips & Best Practices</h3>
+                <h3 class="font-bold text-gray-800">💡 Simplified Upload Tips & Best Practices</h3>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
                 <div class="space-y-3">
                     <h4 class="font-semibold text-blue-600">📁 File Requirements:</h4>
                     <div class="space-y-2">
@@ -317,8 +434,33 @@
                     </div>
                 </div>
                 <div class="space-y-3">
-                    <h4 class="font-semibold text-purple-600">🎯 Best Practices:</h4>
+                    <h4 class="font-semibold text-purple-600">🏷️ Tagging Best Practices:</h4>
                     <div class="space-y-2">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-yellow-500 mt-1"></i>
+                            <span class="text-gray-600">Enter 3-5 relevant tags separated by commas</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-yellow-500 mt-1"></i>
+                            <span class="text-gray-600">Mix style tags (cute, detailed) with content tags (animal, flower)</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-yellow-500 mt-1"></i>
+                            <span class="text-gray-600">Use difficulty tags (easy, detailed) to help parents choose</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-yellow-500 mt-1"></i>
+                            <span class="text-gray-600">Tags are automatically cleaned and formatted</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-semibold text-green-600">🎯 Organization Tips:</h4>
+                    <div class="space-y-2">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-yellow-500 mt-1"></i>
+                            <span class="text-gray-600">Use specific child categories when available</span>
+                        </div>
                         <div class="flex items-start space-x-2">
                             <i class="fas fa-star text-yellow-500 mt-1"></i>
                             <span class="text-gray-600">Group related images in same upload session</span>
@@ -326,10 +468,6 @@
                         <div class="flex items-start space-x-2">
                             <i class="fas fa-star text-yellow-500 mt-1"></i>
                             <span class="text-gray-600">Match thumbnail order with PDF order</span>
-                        </div>
-                        <div class="flex items-start space-x-2">
-                            <i class="fas fa-star text-yellow-500 mt-1"></i>
-                            <span class="text-gray-600">Choose appropriate category before uploading</span>
                         </div>
                         <div class="flex items-start space-x-2">
                             <i class="fas fa-star text-yellow-500 mt-1"></i>
@@ -429,9 +567,59 @@
     .group:nth-child(5) {
         animation-delay: 0.5s;
     }
+
+    .group:nth-child(6) {
+        animation-delay: 0.6s;
+    }
 </style>
 
 <script>
+    // Simplified child categories data (example)
+    const childCategoriesData = [{
+            id: 1,
+            parent_id: 1,
+            name: 'Cats',
+            slug: 'cats'
+        },
+        {
+            id: 2,
+            parent_id: 1,
+            name: 'Dogs',
+            slug: 'dogs'
+        },
+        {
+            id: 3,
+            parent_id: 1,
+            name: 'Wild Animals',
+            slug: 'wild-animals'
+        },
+        {
+            id: 4,
+            parent_id: 2,
+            name: 'Disney',
+            slug: 'disney'
+        },
+        {
+            id: 5,
+            parent_id: 2,
+            name: 'Anime',
+            slug: 'anime'
+        },
+        {
+            id: 6,
+            parent_id: 3,
+            name: 'Christmas',
+            slug: 'christmas'
+        },
+        {
+            id: 7,
+            parent_id: 3,
+            name: 'Halloween',
+            slug: 'halloween'
+        },
+        // Add more as needed...
+    ];
+
     const form = document.getElementById('uploadForm');
     const progressContainer = document.getElementById('progressContainer');
     const progressBar = document.getElementById('progressBar');
@@ -439,6 +627,331 @@
     const submitBtn = document.getElementById('submitBtn');
     const pdfFiles = document.getElementById('pdfFiles');
     const thumbFiles = document.getElementById('thumbFiles');
+
+    // Update child categories when parent is selected
+    function updateChildCategories() {
+        const parentSelect = document.getElementById('parentCategorySelect');
+        const childSelect = document.getElementById('childCategorySelect');
+        const categoryPreview = document.getElementById('categoryPreview');
+        const categoryPath = document.getElementById('categoryPath');
+
+        const selectedParentId = parentSelect.value;
+        const selectedParentText = parentSelect.options[parentSelect.selectedIndex]?.text || '';
+
+        // Clear child categories
+        childSelect.innerHTML = '<option value="">🎯 Choose specific category...</option>';
+
+        if (selectedParentId) {
+            // Enable child select
+            childSelect.disabled = false;
+
+            // Add parent category as an option
+            childSelect.innerHTML += `<option value="${selectedParentId}">Use "${selectedParentText}" (Parent Category)</option>`;
+
+            // Add child categories
+            const children = childCategoriesData.filter(child => child.parent_id == selectedParentId);
+            children.forEach(child => {
+                const childEmoji = getCategoryEmoji(child.name);
+                childSelect.innerHTML += `<option value="${child.id}">${childEmoji} ${child.name}</option>`;
+            });
+
+            // Show category preview
+            categoryPreview.classList.remove('hidden');
+            categoryPath.innerHTML = `
+                <span class="text-purple-600 font-bold">${selectedParentText.split(' ')[1] || selectedParentText}</span>
+                <span class="text-gray-400">></span>
+                <span class="text-gray-500">Select specific category...</span>
+            `;
+        } else {
+            // Disable child select
+            childSelect.disabled = true;
+            categoryPreview.classList.add('hidden');
+        }
+    }
+
+    // Update category path when child is selected
+    document.getElementById('childCategorySelect').addEventListener('change', function() {
+        const parentSelect = document.getElementById('parentCategorySelect');
+        const categoryPath = document.getElementById('categoryPath');
+
+        const selectedParentText = parentSelect.options[parentSelect.selectedIndex]?.text || '';
+        const selectedChildText = this.options[this.selectedIndex]?.text || '';
+        const selectedChildId = this.value;
+        const selectedParentId = parentSelect.value;
+
+        if (selectedChildId && selectedChildId !== selectedParentId) {
+            // Child category selected
+            categoryPath.innerHTML = `
+                <span class="text-purple-600 font-bold">${selectedParentText.split(' ')[1] || selectedParentText}</span>
+                <span class="text-gray-400">></span>
+                <span class="text-blue-600 font-bold">${selectedChildText.substring(2) || selectedChildText}</span>
+            `;
+        } else if (selectedChildId === selectedParentId) {
+            // Parent category selected
+            categoryPath.innerHTML = `
+                <span class="text-purple-600 font-bold">${selectedParentText.split(' ')[1] || selectedParentText}</span>
+                <span class="text-sm text-gray-500 ml-2">(Parent Category)</span>
+            `;
+        }
+    });
+
+    // Get category emoji
+    function getCategoryEmoji(name) {
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes('cat')) return '🐱';
+        if (lowerName.includes('dog')) return '🐶';
+        if (lowerName.includes('wild')) return '🦁';
+        if (lowerName.includes('disney')) return '🏰';
+        if (lowerName.includes('anime')) return '⚡';
+        if (lowerName.includes('christmas')) return '🎄';
+        if (lowerName.includes('halloween')) return '🎃';
+        return '🎨';
+    }
+
+    // Interactive Tags System
+    let currentTags = [];
+    const tagColors = ['#EC4899', '#F97316', '#8B5CF6', '#06B6D4', '#10B981', '#F59E0B', '#84CC16', '#EF4444', '#0EA5E9', '#F472B6'];
+
+    // Focus the tag input when container is clicked
+    function focusTagInput() {
+        document.getElementById('tagInput').focus();
+    }
+
+    // Handle tag input (Enter, comma, space)
+    function handleTagInput(event) {
+        const input = event.target;
+        const value = input.value.trim();
+
+        // Handle Enter, comma, or space
+        if (event.key === 'Enter' || event.key === ',' || event.key === ' ') {
+            event.preventDefault();
+
+            if (value) {
+                addTag(value);
+                input.value = '';
+                updateTagCounter();
+            }
+        }
+
+        // Handle Backspace when input is empty (remove last tag)
+        else if (event.key === 'Backspace' && input.value === '' && currentTags.length > 0) {
+            removeTag(currentTags.length - 1);
+            updateTagCounter();
+        }
+    }
+
+    // Handle typing for real-time feedback
+    function handleTagTyping(event) {
+        const input = event.target;
+        const value = input.value;
+
+        // Auto-add tag if it contains comma or enters
+        if (value.includes(',')) {
+            const parts = value.split(',');
+            const newTag = parts[0].trim();
+
+            if (newTag) {
+                addTag(newTag);
+                input.value = parts.slice(1).join(',').trim();
+                updateTagCounter();
+            }
+        }
+    }
+
+    // Handle paste event
+    function handleTagPaste(event) {
+        setTimeout(() => {
+            const input = event.target;
+            const value = input.value;
+
+            if (value.includes(',')) {
+                const tags = value.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+                tags.forEach(tag => {
+                    if (tag) addTag(tag);
+                });
+
+                input.value = '';
+                updateTagCounter();
+            }
+        }, 10);
+    }
+
+    // Add a new tag
+    function addTag(tagText) {
+        // Clean the tag
+        const cleanTag = cleanTagText(tagText);
+
+        if (!cleanTag || cleanTag.length < 2) {
+            showMessage('Tag must be at least 2 characters long!', 'error');
+            return;
+        }
+
+        if (cleanTag.length > 20) {
+            showMessage('Tag cannot be longer than 20 characters!', 'error');
+            return;
+        }
+
+        // Check for duplicates
+        if (currentTags.some(tag => tag.toLowerCase() === cleanTag.toLowerCase())) {
+            showMessage(`Tag "${cleanTag}" already exists!`, 'error');
+            return;
+        }
+
+        // Check max tags limit
+        if (currentTags.length >= 10) {
+            showMessage('Maximum 10 tags allowed!', 'error');
+            return;
+        }
+
+        // Add to array
+        currentTags.push(cleanTag);
+
+        // Update UI
+        renderTags();
+        updateHiddenInput();
+        updateTagCounter();
+
+        // Show success message
+        showMessage(`✨ Tag "${cleanTag}" added!`, 'success');
+    }
+
+    // Remove a tag by index
+    function removeTag(index) {
+        if (index >= 0 && index < currentTags.length) {
+            const removedTag = currentTags[index];
+            currentTags.splice(index, 1);
+
+            renderTags();
+            updateHiddenInput();
+            updateTagCounter();
+
+            showMessage(`🗑️ Tag "${removedTag}" removed!`, 'success');
+        }
+    }
+
+    // Clean tag text
+    function cleanTagText(text) {
+        return text
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-zA-Z0-9\s-]/g, '') // Remove special characters
+            .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+            .trim();
+    }
+
+    // Capitalize tag for display
+    function capitalizeTag(tag) {
+        return tag.split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    }
+
+    // Render all tags in the container
+    function renderTags() {
+        const container = document.getElementById('tagsContainer');
+        const input = document.getElementById('tagInput');
+
+        // Clear existing tags (keep input)
+        const existingTags = container.querySelectorAll('.tag-item');
+        existingTags.forEach(tag => tag.remove());
+
+        // Add new tags
+        currentTags.forEach((tag, index) => {
+            const tagElement = createTagElement(tag, index);
+            container.insertBefore(tagElement, input);
+        });
+
+        // Update placeholder
+        if (currentTags.length > 0) {
+            input.placeholder = 'Add more tags...';
+        } else {
+            input.placeholder = 'Type tags and press Enter or comma...';
+        }
+    }
+
+    // Create a tag element
+    function createTagElement(tagText, index) {
+        const tagDiv = document.createElement('div');
+        tagDiv.className = 'tag-item inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white transition-all hover:scale-105 cursor-default';
+        tagDiv.style.backgroundColor = tagColors[index % tagColors.length];
+
+        tagDiv.innerHTML = `
+            <span class="mr-2">${capitalizeTag(tagText)}</span>
+            <button type="button" 
+                    onclick="removeTag(${index})" 
+                    class="text-white hover:text-gray-200 hover:bg-black hover:bg-opacity-20 rounded-full w-4 h-4 flex items-center justify-center text-xs transition-all"
+                    title="Remove tag">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        // Add click animation
+        tagDiv.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+
+        tagDiv.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+
+        return tagDiv;
+    }
+
+    // Update hidden input for form submission
+    function updateHiddenInput() {
+        const hiddenInput = document.getElementById('hiddenTagsInput');
+        hiddenInput.value = currentTags.join(',');
+    }
+
+    // Update tag counter
+    function updateTagCounter() {
+        const counter = document.getElementById('tagCounter');
+        const count = currentTags.length;
+
+        if (count > 0) {
+            counter.textContent = `${count} tag${count > 1 ? 's' : ''}`;
+            counter.classList.remove('opacity-0');
+            counter.classList.add('opacity-100');
+
+            // Change color based on count
+            if (count >= 8) {
+                counter.className = counter.className.replace('bg-blue-500', 'bg-red-500');
+            } else if (count >= 5) {
+                counter.className = counter.className.replace('bg-blue-500', 'bg-yellow-500');
+                counter.className = counter.className.replace('bg-red-500', 'bg-yellow-500');
+            } else {
+                counter.className = counter.className.replace('bg-yellow-500', 'bg-blue-500');
+                counter.className = counter.className.replace('bg-red-500', 'bg-blue-500');
+            }
+        } else {
+            counter.classList.remove('opacity-100');
+            counter.classList.add('opacity-0');
+        }
+    }
+
+    // Initialize tags from existing value (for form restoration)
+    function initializeTags() {
+        const hiddenInput = document.getElementById('hiddenTagsInput');
+        if (hiddenInput.value) {
+            const existingTags = hiddenInput.value.split(',').filter(tag => tag.trim());
+            existingTags.forEach(tag => {
+                currentTags.push(tag.trim());
+            });
+            renderTags();
+            updateTagCounter();
+        }
+    }
+
+    // Process manual tags (legacy support - now unused but kept for compatibility)
+    function processManualTags() {
+        // This function is kept for compatibility but not used in the new system
+    }
+
+    // Remove manual tag (legacy support - now unused but kept for compatibility)
+    function removeManualTag(tagToRemove) {
+        // This function is kept for compatibility but not used in the new system
+    }
 
     // File list management
     function updateFileList(input, listContainer, listElement) {
@@ -593,12 +1106,12 @@
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        const categoryId = document.getElementById('categorySelect').value;
+        const categoryId = document.getElementById('childCategorySelect').value;
         const pdfFilesList = Array.from(pdfFiles.files);
 
         if (!categoryId) {
-            showMessage('Please select a category! 📁', 'error');
-            document.getElementById('categorySelect').focus();
+            showMessage('Please select a specific category! 📁', 'error');
+            document.getElementById('childCategorySelect').focus();
             return;
         }
 
@@ -627,12 +1140,14 @@
                 progressBar.textContent = percent + '%';
 
                 // Update progress text
-                if (percent < 25) {
+                if (percent < 20) {
                     progressText.textContent = '📤 Uploading files...';
-                } else if (percent < 50) {
+                } else if (percent < 40) {
                     progressText.textContent = '🎨 Processing coloring pages...';
-                } else if (percent < 75) {
+                } else if (percent < 60) {
                     progressText.textContent = '🖼️ Creating thumbnails...';
+                } else if (percent < 80) {
+                    progressText.textContent = '🏷️ Applying tags...';
                 } else if (percent < 100) {
                     progressText.textContent = '✨ Finalizing upload...';
                 } else {
@@ -649,8 +1164,10 @@
                 try {
                     const response = JSON.parse(xhr.responseText);
                     if (response.status === 'success') {
-                        progressText.textContent = `🎉 Successfully uploaded ${response.uploaded.length} coloring pages!`;
-                        showMessage(`🎉 Successfully uploaded ${response.uploaded.length} coloring pages!`, 'success');
+                        const tagInfo = currentTags.length > 0 ? ` with ${currentTags.length} tags` : '';
+
+                        progressText.textContent = `🎉 Successfully uploaded ${response.uploaded.length} coloring pages${tagInfo}!`;
+                        showMessage(`🎉 Successfully uploaded ${response.uploaded.length} coloring pages with interactive tags!`, 'success');
 
                         setTimeout(() => {
                             window.location.href = '/admin/images';
@@ -692,13 +1209,23 @@
 
     // Reset form function
     function resetForm() {
-        const confirmReset = confirm('🔄 Are you sure you want to reset the form?\n\nThis will clear all selected files and form data.');
+        const confirmReset = confirm('🔄 Are you sure you want to reset the form?\n\nThis will clear all selected files, tags, and form data.');
         if (confirmReset) {
             form.reset();
             document.getElementById('pdfFileList').classList.add('hidden');
             document.getElementById('thumbFileList').classList.add('hidden');
             document.getElementById('fileMatching').classList.add('hidden');
+            document.getElementById('categoryPreview').classList.add('hidden');
+            document.getElementById('childCategorySelect').disabled = true;
+
+            // Reset interactive tags
+            currentTags = [];
+            renderTags();
+            updateTagCounter();
+            updateHiddenInput();
+
             progressContainer.classList.add('hidden');
+
             resetUploadState();
             showMessage('📝 Form has been reset!', 'success');
         }
@@ -723,6 +1250,9 @@
 
     // Enhanced interactions
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize interactive tags
+        initializeTags();
+
         // Focus animations
         const inputs = document.querySelectorAll('input, textarea, select');
         inputs.forEach(input => {
@@ -734,19 +1264,6 @@
             input.addEventListener('blur', function() {
                 this.parentElement.classList.remove('scale-105');
             });
-        });
-
-        // Category selection enhancement
-        const categorySelect = document.getElementById('categorySelect');
-        categorySelect.addEventListener('change', function() {
-            if (this.value) {
-                this.classList.add('border-green-400');
-                this.classList.remove('border-gray-200');
-                showMessage('📁 Category selected: ' + this.options[this.selectedIndex].text, 'success');
-            } else {
-                this.classList.remove('border-green-400');
-                this.classList.add('border-gray-200');
-            }
         });
 
         // File validation
@@ -794,31 +1311,6 @@
                 }
             }
         });
-
-        // Add loading animations on page load
-        const animatedElements = document.querySelectorAll('.group, .bg-gradient-to-r');
-        animatedElements.forEach((element, index) => {
-            setTimeout(() => {
-                element.style.transform = 'translateY(-2px)';
-                element.style.transition = 'transform 0.3s ease';
-                setTimeout(() => {
-                    element.style.transform = 'translateY(0)';
-                }, 300);
-            }, index * 100);
-        });
-
-        // Interactive hover effects for tips
-        const tipElements = document.querySelectorAll('.fas.fa-check-circle, .fas.fa-star');
-        tipElements.forEach(element => {
-            element.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.2) rotate(360deg)';
-                this.style.transition = 'transform 0.5s ease';
-            });
-
-            element.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1) rotate(0deg)';
-            });
-        });
     });
 
     // Keyboard shortcuts
@@ -837,49 +1329,4 @@
             resetForm();
         }
     });
-
-    // Auto-save form data to prevent loss
-    let autoSaveTimer;
-
-    function autoSaveFormData() {
-        const formData = {
-            category_id: document.getElementById('categorySelect').value,
-            meta_title: document.getElementById('metaTitle').value,
-            meta_description: document.getElementById('metaDescription').value
-        };
-        localStorage.setItem('uploadFormData', JSON.stringify(formData));
-    }
-
-    // Restore form data on page load
-    function restoreFormData() {
-        const savedData = localStorage.getItem('uploadFormData');
-        if (savedData) {
-            try {
-                const formData = JSON.parse(savedData);
-                document.getElementById('categorySelect').value = formData.category_id || '';
-                document.getElementById('metaTitle').value = formData.meta_title || '';
-                document.getElementById('metaDescription').value = formData.meta_description || '';
-            } catch (e) {
-                console.log('Could not restore form data');
-            }
-        }
-    }
-
-    // Auto-save on form changes
-    ['change', 'input'].forEach(eventType => {
-        form.addEventListener(eventType, function(e) {
-            if (['SELECT', 'INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-                clearTimeout(autoSaveTimer);
-                autoSaveTimer = setTimeout(autoSaveFormData, 1000);
-            }
-        });
-    });
-
-    // Clear saved data on successful upload
-    form.addEventListener('submit', function() {
-        localStorage.removeItem('uploadFormData');
-    });
-
-    // Restore data on page load
-    window.addEventListener('load', restoreFormData);
 </script>

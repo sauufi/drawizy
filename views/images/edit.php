@@ -4,7 +4,7 @@
         <i class="fas fa-edit text-white text-2xl"></i>
     </div>
     <h1 class="text-3xl font-bold text-gray-800 mb-2">Edit Coloring Page</h1>
-    <p class="text-gray-600">Update your coloring page information and files! 🎨✨</p>
+    <p class="text-gray-600">Update your coloring page information, tags, and files! 🎨✨</p>
 </div>
 
 <!-- Current Image Info -->
@@ -77,6 +77,18 @@
                         <span class="text-gray-400 text-sm">No preview image</span>
                     <?php endif; ?>
                 </div>
+
+                <!-- Current Tags Display -->
+                <div class="bg-white rounded-xl p-4 shadow-md">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-semibold text-gray-700">Current Tags:</span>
+                        <i class="fas fa-tags text-purple-500"></i>
+                    </div>
+                    <div id="currentTagsDisplay" class="flex flex-wrap gap-1">
+                        <!-- Current tags will be loaded here -->
+                        <span class="text-gray-400 text-sm">Loading tags...</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -92,8 +104,8 @@
                     <i class="fas fa-edit text-green-500 text-lg"></i>
                 </div>
                 <div class="text-white">
-                    <h2 class="text-xl font-bold">Edit Form</h2>
-                    <p class="text-green-100">Update coloring page information and files</p>
+                    <h2 class="text-xl font-bold">Enhanced Edit Form</h2>
+                    <p class="text-green-100">Update coloring page information, tags, and files</p>
                 </div>
             </div>
         </div>
@@ -215,6 +227,100 @@
                         <i class="fas fa-star text-purple-400 mr-1"></i>
                         Choose the most appropriate category for this coloring page
                     </p>
+                </div>
+
+                <!-- Interactive Tags Section -->
+                <div class="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 border-2 border-dashed border-pink-200">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <i class="fas fa-tags text-pink-500 text-lg"></i>
+                        <h3 class="text-lg font-semibold text-gray-700">🏷️ Update Tags</h3>
+                    </div>
+
+                    <!-- Interactive Tags Input Container -->
+                    <div class="mb-6">
+                        <label class="flex items-center space-x-2 text-gray-700 font-semibold mb-3">
+                            <i class="fas fa-magic text-blue-500"></i>
+                            <span>Edit Tags</span>
+                            <span class="text-sm text-gray-500 ml-2">(Press Enter or comma to add)</span>
+                        </label>
+
+                        <!-- Tags Container with Input -->
+                        <div class="relative">
+                            <div id="tagsContainer"
+                                class="min-h-14 w-full border-2 border-gray-200 rounded-2xl p-3 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-100 transition-all duration-300 bg-white cursor-text flex flex-wrap items-center gap-2"
+                                onclick="focusTagInput()">
+
+                                <!-- Tags will be inserted here dynamically -->
+
+                                <!-- Input field inside the container -->
+                                <input type="text"
+                                    id="tagInput"
+                                    class="flex-1 min-w-32 border-0 outline-none bg-transparent text-gray-700 placeholder-gray-400"
+                                    placeholder="Type tags and press Enter or comma..."
+                                    onkeydown="handleTagInput(event)"
+                                    onkeyup="handleTagTyping(event)"
+                                    onpaste="handleTagPaste(event)">
+                            </div>
+
+                            <!-- Hidden input for form submission -->
+                            <input type="hidden" name="tags" id="hiddenTagsInput">
+
+                            <!-- Tag counter -->
+                            <div class="absolute -top-2 right-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full opacity-0 transition-opacity" id="tagCounter">
+                                0 tags
+                            </div>
+                        </div>
+
+                        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <div class="text-sm text-blue-700">
+                                    <i class="fas fa-keyboard text-blue-500 mr-1"></i>
+                                    <strong>Quick Edit:</strong> Type and press Enter, comma, or space to add/edit tags instantly!
+                                </div>
+                            </div>
+                            <div class="p-3 bg-green-50 rounded-lg border border-green-200">
+                                <div class="text-sm text-green-700">
+                                    <i class="fas fa-mouse-pointer text-green-500 mr-1"></i>
+                                    <strong>Easy Remove:</strong> Click the × on any tag to remove it quickly!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tag Examples -->
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+                        <h5 class="font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-lightbulb text-purple-500 mr-2"></i>
+                            Popular Tag Ideas
+                        </h5>
+                        <div class="text-sm text-gray-600 mb-3">Click any example to add it to your tags:</div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-sm">
+                            <button type="button" onclick="addQuickTag('cute')" class="tag-suggestion p-2 bg-white rounded-lg text-left hover:bg-purple-100 transition-colors border border-purple-200">
+                                <strong>cute</strong> - adorable designs
+                            </button>
+                            <button type="button" onclick="addQuickTag('easy')" class="tag-suggestion p-2 bg-white rounded-lg text-left hover:bg-purple-100 transition-colors border border-purple-200">
+                                <strong>easy</strong> - simple for beginners
+                            </button>
+                            <button type="button" onclick="addQuickTag('detailed')" class="tag-suggestion p-2 bg-white rounded-lg text-left hover:bg-purple-100 transition-colors border border-purple-200">
+                                <strong>detailed</strong> - complex designs
+                            </button>
+                            <button type="button" onclick="addQuickTag('kawaii')" class="tag-suggestion p-2 bg-white rounded-lg text-left hover:bg-purple-100 transition-colors border border-purple-200">
+                                <strong>kawaii</strong> - Japanese cute style
+                            </button>
+                            <button type="button" onclick="addQuickTag('realistic')" class="tag-suggestion p-2 bg-white rounded-lg text-left hover:bg-purple-100 transition-colors border border-purple-200">
+                                <strong>realistic</strong> - lifelike designs
+                            </button>
+                            <button type="button" onclick="addQuickTag('cartoon')" class="tag-suggestion p-2 bg-white rounded-lg text-left hover:bg-purple-100 transition-colors border border-purple-200">
+                                <strong>cartoon</strong> - animated style
+                            </button>
+                            <button type="button" onclick="addQuickTag('baby')" class="tag-suggestion p-2 bg-white rounded-lg text-left hover:bg-purple-100 transition-colors border border-purple-200">
+                                <strong>baby</strong> - young characters
+                            </button>
+                            <button type="button" onclick="addQuickTag('colorful')" class="tag-suggestion p-2 bg-white rounded-lg text-left hover:bg-purple-100 transition-colors border border-purple-200">
+                                <strong>colorful</strong> - vibrant designs
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SEO Fields -->
@@ -373,9 +479,9 @@
                 <div class="bg-gradient-to-r from-green-400 to-blue-500 rounded-full p-2">
                     <i class="fas fa-lightbulb text-white"></i>
                 </div>
-                <h3 class="font-bold text-gray-800">💡 Editing Tips & Best Practices</h3>
+                <h3 class="font-bold text-gray-800">💡 Enhanced Editing Tips & Best Practices</h3>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
                 <div class="space-y-3">
                     <h4 class="font-semibold text-green-600">✏️ Content Updates:</h4>
                     <div class="space-y-2">
@@ -390,6 +496,23 @@
                         <div class="flex items-start space-x-2">
                             <i class="fas fa-check-circle text-green-500 mt-1"></i>
                             <span class="text-gray-600">Use SEO fields for better search visibility</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-semibold text-purple-600">🏷️ Tags Management:</h4>
+                    <div class="space-y-2">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-purple-500 mt-1"></i>
+                            <span class="text-gray-600">Use 3-5 relevant tags for better discovery</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-purple-500 mt-1"></i>
+                            <span class="text-gray-600">Mix style and content tags effectively</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-purple-500 mt-1"></i>
+                            <span class="text-gray-600">Click examples to quickly add popular tags</span>
                         </div>
                     </div>
                 </div>
@@ -429,6 +552,11 @@
         transition: transform 0.2s ease-in-out;
     }
 
+    .tag-suggestion:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s ease;
+    }
+
     @keyframes slideInUp {
         from {
             opacity: 0;
@@ -465,6 +593,10 @@
         animation-delay: 0.5s;
     }
 
+    .group:nth-child(6) {
+        animation-delay: 0.6s;
+    }
+
     button:hover,
     a:hover {
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1);
@@ -495,10 +627,285 @@
         category_id: '<?= $image['category_id'] ?>'
     };
 
+    // Interactive Tags System
+    let currentTags = [];
+    const tagColors = ['#EC4899', '#F97316', '#8B5CF6', '#06B6D4', '#10B981', '#F59E0B', '#84CC16', '#EF4444', '#0EA5E9', '#F472B6'];
+
+    // Focus the tag input when container is clicked
+    function focusTagInput() {
+        document.getElementById('tagInput').focus();
+    }
+
+    // Handle tag input (Enter, comma, space)
+    function handleTagInput(event) {
+        const input = event.target;
+        const value = input.value.trim();
+
+        // Handle Enter, comma, or space
+        if (event.key === 'Enter' || event.key === ',' || event.key === ' ') {
+            event.preventDefault();
+
+            if (value) {
+                addTag(value);
+                input.value = '';
+                updateTagCounter();
+            }
+        }
+
+        // Handle Backspace when input is empty (remove last tag)
+        else if (event.key === 'Backspace' && input.value === '' && currentTags.length > 0) {
+            removeTag(currentTags.length - 1);
+            updateTagCounter();
+        }
+    }
+
+    // Handle typing for real-time feedback
+    function handleTagTyping(event) {
+        const input = event.target;
+        const value = input.value;
+
+        // Auto-add tag if it contains comma
+        if (value.includes(',')) {
+            const parts = value.split(',');
+            const newTag = parts[0].trim();
+
+            if (newTag) {
+                addTag(newTag);
+                input.value = parts.slice(1).join(',').trim();
+                updateTagCounter();
+            }
+        }
+    }
+
+    // Handle paste event
+    function handleTagPaste(event) {
+        setTimeout(() => {
+            const input = event.target;
+            const value = input.value;
+
+            if (value.includes(',')) {
+                const tags = value.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+                tags.forEach(tag => {
+                    if (tag) addTag(tag);
+                });
+
+                input.value = '';
+                updateTagCounter();
+            }
+        }, 10);
+    }
+
+    // Add a new tag
+    function addTag(tagText) {
+        // Clean the tag
+        const cleanTag = cleanTagText(tagText);
+
+        if (!cleanTag || cleanTag.length < 2) {
+            showMessage('Tag must be at least 2 characters long!', 'error');
+            return;
+        }
+
+        if (cleanTag.length > 20) {
+            showMessage('Tag cannot be longer than 20 characters!', 'error');
+            return;
+        }
+
+        // Check for duplicates
+        if (currentTags.some(tag => tag.toLowerCase() === cleanTag.toLowerCase())) {
+            showMessage(`Tag "${cleanTag}" already exists!`, 'error');
+            return;
+        }
+
+        // Check max tags limit
+        if (currentTags.length >= 10) {
+            showMessage('Maximum 10 tags allowed!', 'error');
+            return;
+        }
+
+        // Add to array
+        currentTags.push(cleanTag);
+
+        // Update UI
+        renderTags();
+        updateHiddenInput();
+        updateTagCounter();
+
+        // Show success message
+        showMessage(`✨ Tag "${cleanTag}" added!`, 'success');
+    }
+
+    // Add quick tag from suggestions
+    function addQuickTag(tagName) {
+        addTag(tagName);
+    }
+
+    // Remove a tag by index
+    function removeTag(index) {
+        if (index >= 0 && index < currentTags.length) {
+            const removedTag = currentTags[index];
+            currentTags.splice(index, 1);
+
+            renderTags();
+            updateHiddenInput();
+            updateTagCounter();
+
+            showMessage(`🗑️ Tag "${removedTag}" removed!`, 'success');
+        }
+    }
+
+    // Clean tag text
+    function cleanTagText(text) {
+        return text
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-zA-Z0-9\s-]/g, '') // Remove special characters
+            .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+            .trim();
+    }
+
+    // Capitalize tag for display
+    function capitalizeTag(tag) {
+        return tag.split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    }
+
+    // Render all tags in the container
+    function renderTags() {
+        const container = document.getElementById('tagsContainer');
+        const input = document.getElementById('tagInput');
+
+        // Clear existing tags (keep input)
+        const existingTags = container.querySelectorAll('.tag-item');
+        existingTags.forEach(tag => tag.remove());
+
+        // Add new tags
+        currentTags.forEach((tag, index) => {
+            const tagElement = createTagElement(tag, index);
+            container.insertBefore(tagElement, input);
+        });
+
+        // Update placeholder
+        if (currentTags.length > 0) {
+            input.placeholder = 'Add more tags...';
+        } else {
+            input.placeholder = 'Type tags and press Enter or comma...';
+        }
+    }
+
+    // Create a tag element
+    function createTagElement(tagText, index) {
+        const tagDiv = document.createElement('div');
+        tagDiv.className = 'tag-item inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white transition-all hover:scale-105 cursor-default';
+        tagDiv.style.backgroundColor = tagColors[index % tagColors.length];
+
+        tagDiv.innerHTML = `
+            <span class="mr-2">${capitalizeTag(tagText)}</span>
+            <button type="button" 
+                    onclick="removeTag(${index})" 
+                    class="text-white hover:text-gray-200 hover:bg-black hover:bg-opacity-20 rounded-full w-4 h-4 flex items-center justify-center text-xs transition-all"
+                    title="Remove tag">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        // Add click animation
+        tagDiv.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+
+        tagDiv.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+
+        return tagDiv;
+    }
+
+    // Update hidden input for form submission
+    function updateHiddenInput() {
+        const hiddenInput = document.getElementById('hiddenTagsInput');
+        hiddenInput.value = currentTags.join(',');
+    }
+
+    // Update tag counter
+    function updateTagCounter() {
+        const counter = document.getElementById('tagCounter');
+        const count = currentTags.length;
+
+        if (count > 0) {
+            counter.textContent = `${count} tag${count > 1 ? 's' : ''}`;
+            counter.classList.remove('opacity-0');
+            counter.classList.add('opacity-100');
+
+            // Change color based on count
+            if (count >= 8) {
+                counter.className = counter.className.replace('bg-blue-500', 'bg-red-500');
+            } else if (count >= 5) {
+                counter.className = counter.className.replace('bg-blue-500', 'bg-yellow-500');
+                counter.className = counter.className.replace('bg-red-500', 'bg-yellow-500');
+            } else {
+                counter.className = counter.className.replace('bg-yellow-500', 'bg-blue-500');
+                counter.className = counter.className.replace('bg-red-500', 'bg-blue-500');
+            }
+        } else {
+            counter.classList.remove('opacity-100');
+            counter.classList.add('opacity-0');
+        }
+    }
+
+    // Load existing tags for this image
+    function loadExistingTags() {
+        // This would typically fetch from the server - for now we'll simulate
+        const existingTagsFromServer = []; // Replace with actual data from PHP
+
+        existingTagsFromServer.forEach(tag => {
+            currentTags.push(tag);
+        });
+
+        renderTags();
+        updateTagCounter();
+        updateHiddenInput();
+    }
+
+    // Display current tags in info section
+    function displayCurrentTags(tags) {
+        const currentTagsDisplay = document.getElementById('currentTagsDisplay');
+
+        if (tags && tags.length > 0) {
+            currentTagsDisplay.innerHTML = tags.map((tag, index) => {
+                const color = tagColors[index % tagColors.length];
+                return `
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white"
+                          style="background-color: ${color}">
+                        ${capitalizeTag(tag)}
+                    </span>
+                `;
+            }).join('');
+        } else {
+            currentTagsDisplay.innerHTML = '<span class="text-gray-400 text-sm">No tags assigned</span>';
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const titleInput = document.getElementById('title');
         const slugInput = document.getElementById('slug');
         const newUrl = document.getElementById('newUrl');
+
+        // Initialize tags system
+        loadExistingTags();
+
+        // Load and display current tags (this would come from server)
+        const currentImageTags = []; // Replace with actual tags from PHP
+        displayCurrentTags(currentImageTags);
+
+        // Copy current tags to editable tags
+        currentImageTags.forEach(tag => {
+            currentTags.push(tag);
+        });
+        renderTags();
+        updateTagCounter();
+        updateHiddenInput();
 
         // Auto-generate slug from title
         titleInput.addEventListener('input', function() {
@@ -592,12 +999,13 @@
                 return;
             }
 
-            showMessage('Saving changes... ✨', 'success');
+            const tagInfo = currentTags.length > 0 ? ` with ${currentTags.length} tags` : '';
+            showMessage(`Saving changes${tagInfo}... ✨`, 'success');
         });
 
         // Reset form function
         window.resetForm = function() {
-            const confirmReset = confirm('🔄 Are you sure you want to reset all changes?\n\nThis will restore the original values.');
+            const confirmReset = confirm('🔄 Are you sure you want to reset all changes?\n\nThis will restore the original values including tags.');
             if (confirmReset) {
                 titleInput.value = originalValues.title;
                 slugInput.value = originalValues.slug;
@@ -613,6 +1021,16 @@
                 // Reset SEO fields
                 document.querySelector('input[name="meta_title"]').value = '<?= htmlspecialchars($image['meta_title'] ?? '') ?>';
                 document.querySelector('textarea[name="meta_description"]').value = '<?= htmlspecialchars($image['meta_description'] ?? '') ?>';
+
+                // Reset tags
+                currentTags = [];
+                const currentImageTags = []; // Replace with actual original tags
+                currentImageTags.forEach(tag => {
+                    currentTags.push(tag);
+                });
+                renderTags();
+                updateTagCounter();
+                updateHiddenInput();
 
                 // Hide warnings
                 document.getElementById('slugWarning').classList.add('hidden');
