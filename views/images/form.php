@@ -1,3 +1,11 @@
+<?php
+// At the top of your form.php file, add this PHP code to fetch categories
+use App\Models\Category;
+
+// Get parent categories from database
+$parentCategories = Category::getParents();
+?>
+
 <!-- Header Section -->
 <div class="mb-8 text-center">
     <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mb-4 kids-shadow">
@@ -88,17 +96,11 @@
                                     class="w-full border-2 border-gray-200 rounded-2xl p-4 pl-12 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all duration-300 text-lg appearance-none"
                                     required onchange="updateChildCategories()">
                                     <option value="">🎯 Choose a parent category...</option>
-                                    <!-- Parent categories will be populated by PHP -->
-                                    <option value="1" data-slug="animals">🐾 Animals</option>
-                                    <option value="2" data-slug="cartoons">🎭 Cartoons</option>
-                                    <option value="3" data-slug="holidays">🎉 Holidays</option>
-                                    <option value="4" data-slug="learning">📚 Learning</option>
-                                    <option value="5" data-slug="fantasy">🦄 Fantasy</option>
-                                    <option value="6" data-slug="vehicles">🚗 Vehicles</option>
-                                    <option value="7" data-slug="nature">🌿 Nature</option>
-                                    <option value="8" data-slug="dinosaurs">🦕 Dinosaurs</option>
-                                    <option value="9" data-slug="mandalas">🔮 Mandalas</option>
-                                    <option value="10" data-slug="space">🚀 Space</option>
+                                    <?php foreach ($parentCategories as $parent): ?>
+                                        <option value="<?= $parent['id'] ?>" data-slug="<?= $parent['slug'] ?>">
+                                            <?= getCategoryEmoji($parent['name']) ?> <?= htmlspecialchars($parent['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                                 <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
                                     <i class="fas fa-folder text-gray-400 group-focus-within:text-purple-500 transition-colors"></i>
@@ -480,6 +482,32 @@
     </div>
 </div>
 
+<?php
+// Helper function to get category emoji (add this to your functions or wherever appropriate)
+function getCategoryEmoji($name)
+{
+    $lowerName = strtolower($name);
+    if (strpos($lowerName, 'animal') !== false) return '🐾';
+    if (strpos($lowerName, 'cartoon') !== false) return '🎭';
+    if (strpos($lowerName, 'holiday') !== false) return '🎉';
+    if (strpos($lowerName, 'learning') !== false) return '📚';
+    if (strpos($lowerName, 'fantasy') !== false) return '🦄';
+    if (strpos($lowerName, 'vehicle') !== false) return '🚗';
+    if (strpos($lowerName, 'nature') !== false) return '🌿';
+    if (strpos($lowerName, 'dinosaur') !== false) return '🦕';
+    if (strpos($lowerName, 'mandala') !== false) return '🔮';
+    if (strpos($lowerName, 'space') !== false) return '🚀';
+    if (strpos($lowerName, 'cat') !== false) return '🐱';
+    if (strpos($lowerName, 'dog') !== false) return '🐶';
+    if (strpos($lowerName, 'wild') !== false) return '🦁';
+    if (strpos($lowerName, 'disney') !== false) return '🏰';
+    if (strpos($lowerName, 'anime') !== false) return '⚡';
+    if (strpos($lowerName, 'christmas') !== false) return '🎄';
+    if (strpos($lowerName, 'halloween') !== false) return '🎃';
+    return '🎨';
+}
+?>
+
 <style>
     .kids-shadow {
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -574,51 +602,8 @@
 </style>
 
 <script>
-    // Simplified child categories data (example)
-    const childCategoriesData = [{
-            id: 1,
-            parent_id: 1,
-            name: 'Cats',
-            slug: 'cats'
-        },
-        {
-            id: 2,
-            parent_id: 1,
-            name: 'Dogs',
-            slug: 'dogs'
-        },
-        {
-            id: 3,
-            parent_id: 1,
-            name: 'Wild Animals',
-            slug: 'wild-animals'
-        },
-        {
-            id: 4,
-            parent_id: 2,
-            name: 'Disney',
-            slug: 'disney'
-        },
-        {
-            id: 5,
-            parent_id: 2,
-            name: 'Anime',
-            slug: 'anime'
-        },
-        {
-            id: 6,
-            parent_id: 3,
-            name: 'Christmas',
-            slug: 'christmas'
-        },
-        {
-            id: 7,
-            parent_id: 3,
-            name: 'Halloween',
-            slug: 'halloween'
-        },
-        // Add more as needed...
-    ];
+    // Real child categories data from database
+    let childCategoriesData = [];
 
     const form = document.getElementById('uploadForm');
     const progressContainer = document.getElementById('progressContainer');
@@ -628,8 +613,31 @@
     const pdfFiles = document.getElementById('pdfFiles');
     const thumbFiles = document.getElementById('thumbFiles');
 
+    // Function to fetch child categories from database
+    async function fetchChildCategories(parentId) {
+        try {
+            const response = await fetch(`/admin/categories/children/${parentId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                return data;
+            } else {
+                console.error('Failed to fetch child categories');
+                return [];
+            }
+        } catch (error) {
+            console.error('Error fetching child categories:', error);
+            return [];
+        }
+    }
+
     // Update child categories when parent is selected
-    function updateChildCategories() {
+    async function updateChildCategories() {
         const parentSelect = document.getElementById('parentCategorySelect');
         const childSelect = document.getElementById('childCategorySelect');
         const categoryPreview = document.getElementById('categoryPreview');
@@ -645,15 +653,34 @@
             // Enable child select
             childSelect.disabled = false;
 
-            // Add parent category as an option
-            childSelect.innerHTML += `<option value="${selectedParentId}">Use "${selectedParentText}" (Parent Category)</option>`;
+            // Show loading state
+            childSelect.innerHTML += '<option value="" disabled>⏳ Loading categories...</option>';
 
-            // Add child categories
-            const children = childCategoriesData.filter(child => child.parent_id == selectedParentId);
-            children.forEach(child => {
-                const childEmoji = getCategoryEmoji(child.name);
-                childSelect.innerHTML += `<option value="${child.id}">${childEmoji} ${child.name}</option>`;
-            });
+            try {
+                // Fetch child categories from database
+                const children = await fetchChildCategories(selectedParentId);
+
+                // Clear loading state
+                childSelect.innerHTML = '<option value="">🎯 Choose specific category...</option>';
+
+                // Add parent category as an option
+                childSelect.innerHTML += `<option value="${selectedParentId}">Use "${selectedParentText}" (Parent Category)</option>`;
+
+                // Add child categories
+                if (children && children.length > 0) {
+                    children.forEach(child => {
+                        const childEmoji = getCategoryEmoji(child.name);
+                        childSelect.innerHTML += `<option value="${child.id}">${childEmoji} ${child.name}</option>`;
+                    });
+                }
+
+                // Store data for later use
+                childCategoriesData = children;
+
+            } catch (error) {
+                childSelect.innerHTML = '<option value="">❌ Error loading categories</option>';
+                console.error('Error loading child categories:', error);
+            }
 
             // Show category preview
             categoryPreview.classList.remove('hidden');
@@ -695,7 +722,7 @@
         }
     });
 
-    // Get category emoji
+    // Get category emoji (JavaScript version)
     function getCategoryEmoji(name) {
         const lowerName = name.toLowerCase();
         if (lowerName.includes('cat')) return '🐱';
@@ -705,6 +732,16 @@
         if (lowerName.includes('anime')) return '⚡';
         if (lowerName.includes('christmas')) return '🎄';
         if (lowerName.includes('halloween')) return '🎃';
+        if (lowerName.includes('animal')) return '🐾';
+        if (lowerName.includes('cartoon')) return '🎭';
+        if (lowerName.includes('holiday')) return '🎉';
+        if (lowerName.includes('learning')) return '📚';
+        if (lowerName.includes('fantasy')) return '🦄';
+        if (lowerName.includes('vehicle')) return '🚗';
+        if (lowerName.includes('nature')) return '🌿';
+        if (lowerName.includes('dinosaur')) return '🦕';
+        if (lowerName.includes('mandala')) return '🔮';
+        if (lowerName.includes('space')) return '🚀';
         return '🎨';
     }
 
@@ -941,16 +978,6 @@
             renderTags();
             updateTagCounter();
         }
-    }
-
-    // Process manual tags (legacy support - now unused but kept for compatibility)
-    function processManualTags() {
-        // This function is kept for compatibility but not used in the new system
-    }
-
-    // Remove manual tag (legacy support - now unused but kept for compatibility)
-    function removeManualTag(tagToRemove) {
-        // This function is kept for compatibility but not used in the new system
     }
 
     // File list management

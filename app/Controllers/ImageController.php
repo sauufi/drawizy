@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Image;
 use App\Models\Category;
 use App\Models\Setting;
+use App\Models\Tag;
 use App\Core\View;
 
 class ImageController
@@ -20,7 +21,11 @@ class ImageController
     {
         $this->checkAuth();
         $categories = Category::all();
-        View::render('images/form.php', ['categories' => $categories], 'layouts/admin.php');
+        $popularTags = Tag::getPopular(10);
+        View::render('images/form.php', [
+            'categories' => $categories,
+            'popularTags' => $popularTags
+        ], 'layouts/admin.php');
     }
 
     public function store()
@@ -36,11 +41,23 @@ class ImageController
         $filename = time() . "_" . basename($file['name']);
         move_uploaded_file($file['tmp_name'], __DIR__ . "/../../public/uploads/" . $filename);
 
-        \App\Models\Image::store($title, $filename, $slug, $category_id, $meta_title, $meta_description);
+        $result = Image::store($title, $filename, null, $slug, $category_id, $meta_title, $meta_description);
+
+        if ($result['status']) {
+            $imageId = $result['id'];
+
+            // Handle tags
+            if (!empty($_POST['manual_tags'])) {
+                $tagIds = Tag::processTagsFromInput($_POST['manual_tags']);
+                if (!empty($tagIds)) {
+                    Tag::setForImage($imageId, $tagIds);
+                }
+            }
+        }
+
         header("Location: /admin/images");
         exit;
     }
-
 
     public function storeMultiple()
     {
@@ -54,12 +71,19 @@ class ImageController
         $category_id = $_POST['category_id'];
         $meta_title = $_POST['meta_title'] ?? null;
         $meta_description = $_POST['meta_description'] ?? null;
+        $tags_input = $_POST['manual_tags'] ?? '';
 
         $pdfFiles = $_FILES['pdf_files'];
         $thumbFiles = $_FILES['thumb_files'] ?? null;
 
         $totalFiles = count($pdfFiles['name']);
         $results = [];
+
+        // Process tags once for all images
+        $tagIds = [];
+        if (!empty($tags_input)) {
+            $tagIds = Tag::processTagsFromInput($tags_input);
+        }
 
         for ($i = 0; $i < $totalFiles; $i++) {
             // Extract title from PDF filename
@@ -79,7 +103,11 @@ class ImageController
             }
 
             // Store record with SEO meta
-            \App\Models\Image::store($title, $pdfName, $thumbName, $slug, $category_id, $meta_title, $meta_description);
+            $result = Image::store($title, $pdfName, $thumbName, $slug, $category_id, $meta_title, $meta_description);
+
+            if ($result['status'] && !empty($tagIds)) {
+                Tag::setForImage($result['id'], $tagIds);
+            }
 
             $results[] = ['pdf' => $pdfName, 'preview' => $thumbName];
         }
@@ -87,20 +115,25 @@ class ImageController
         echo json_encode(['status' => 'success', 'uploaded' => $results]);
     }
 
-
     public function edit($id)
     {
         $this->checkAuth();
-        $image = \App\Models\Image::find($id);
-        $categories = \App\Models\Category::all();
+        $image = Image::find($id);
+        $categories = Category::all();
+        $popularTags = Tag::getPopular(10);
+        $imageTags = Tag::getByImageId($id);
+
         if (!$image) {
             http_response_code(404);
             echo "Image not found";
             exit;
         }
-        \App\Core\View::render('images/edit.php', [
+
+        View::render('images/edit.php', [
             'image' => $image,
-            'categories' => $categories
+            'categories' => $categories,
+            'popularTags' => $popularTags,
+            'imageTags' => $imageTags
         ], 'layouts/admin.php');
     }
 
@@ -129,7 +162,7 @@ class ImageController
         }
 
         // Update DB (auto slug uniqueness already handled in model)
-        \App\Models\Image::updateImage(
+        Image::updateImage(
             $id,
             $title,
             $filename,
@@ -140,15 +173,20 @@ class ImageController
             $meta_description
         );
 
+        // Handle tags
+        if (isset($_POST['manual_tags'])) {
+            $tagIds = Tag::processTagsFromInput($_POST['manual_tags']);
+            Tag::setForImage($id, $tagIds);
+        }
+
         header("Location: /admin/images");
     }
-
 
     public function checkSlug()
     {
         $slug = $_GET['slug'];
         $id = $_GET['id'] ?? null;
-        $unique = \App\Models\Image::isSlugUnique($slug, $id);
+        $unique = Image::isSlugUnique($slug, $id);
         header('Content-Type: application/json');
         echo json_encode(['unique' => $unique]);
     }
@@ -156,14 +194,20 @@ class ImageController
     public function delete($id)
     {
         $this->checkAuth();
+
+        // Remove all tag associations first
+        Tag::removeAllFromImage($id);
+
+        // Then delete the image
         Image::delete($id);
+
         header("Location: /admin/images");
         exit;
     }
 
     public function detail($slug)
     {
-        $image = \App\Models\Image::findBySlug($slug);
+        $image = Image::findBySlug($slug);
         if (!$image) {
             http_response_code(404);
             echo "Gambar tidak ditemukan";
@@ -177,11 +221,15 @@ class ImageController
         // Ambil 4 gambar terkait berdasarkan kategori
         $relatedImages = Image::getRelated($image['category_id'], $image['id']);
 
+        // Get tags for this image
+        $imageTags = Tag::getByImageId($image['id']);
+
         View::render('frontend/detail.php', [
             'image' => $image,
             'meta_title' => $meta_title,
             'meta_description' => $meta_description,
-            'relatedImages' => $relatedImages
+            'relatedImages' => $relatedImages,
+            'imageTags' => $imageTags
         ], 'layouts/frontend.php');
     }
 
@@ -224,10 +272,9 @@ class ImageController
         ], 'layouts/frontend.php');
     }
 
-
     public function download($id)
     {
-        $image = \App\Models\Image::find($id);
+        $image = Image::find($id);
         if (!$image) {
             echo "Image not found";
             exit;
@@ -239,7 +286,7 @@ class ImageController
             exit;
         }
 
-        \App\Models\Image::incrementDownload($id);
+        Image::incrementDownload($id);
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/pdf'); // because filename is PDF
@@ -253,6 +300,7 @@ class ImageController
     {
         return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $text)));
     }
+
     private function slugifytitle($text)
     {
         return trim(preg_replace('/[^A-Za-z0-9]+/', ' ', $text));
