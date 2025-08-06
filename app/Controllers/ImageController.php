@@ -236,6 +236,7 @@ class ImageController
     public function home()
     {
         $db = \App\Core\Database::getInstance();
+        $setting = \App\Models\Setting::get();
 
         // Ambil keyword pencarian
         $search = $_GET['q'] ?? '';
@@ -247,12 +248,10 @@ class ImageController
         $countQuery = "SELECT COUNT(*) as total FROM images";
         $where = '';
         $params = [];
-
         if ($search) {
             $where = " WHERE title LIKE ?";
             $params[] = "%$search%";
         }
-
         $stmt = $db->prepare($countQuery . $where);
         $stmt->execute($params);
         $total = $stmt->fetch()['total'];
@@ -264,12 +263,63 @@ class ImageController
         $stmt->execute($params);
         $images = $stmt->fetchAll();
 
+        // Generate dynamic meta title and description
+        $meta_title = $this->generateHomeMetaTitle($search, $page, $setting);
+        $meta_description = $this->generateHomeMetaDescription($search, $page, $total, $setting);
+
         \App\Core\View::render('frontend/home.php', [
             'images' => $images,
             'search' => $search,
             'currentPage' => $page,
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
+            'meta_title' => $meta_title,
+            'meta_description' => $meta_description
         ], 'layouts/frontend.php');
+    }
+
+    /**
+     * Generate dynamic meta title for home page
+     */
+    private function generateHomeMetaTitle($search, $page, $setting)
+    {
+        $baseTitle = $setting['site_title'];
+
+        if ($search && $page > 1) {
+            // Search with pagination: "unicorn coloring pages - Page 2 - Site Name"
+            return htmlspecialchars($search) . " Coloring Pages - Page {$page} - {$baseTitle}";
+        } elseif ($search) {
+            // Search only: "unicorn coloring pages - Site Name" 
+            return htmlspecialchars($search) . " Coloring Pages - {$baseTitle}";
+        } elseif ($page > 1) {
+            // Pagination only: "Free Coloring Pages - Page 2 - Site Name"
+            return "Free Coloring Pages - Page {$page} - {$baseTitle}";
+        } else {
+            // Default home page: Use setting or fallback
+            return $baseTitle;
+        }
+    }
+
+    /**
+     * Generate dynamic meta description for home page
+     */
+    private function generateHomeMetaDescription($search, $page, $total, $setting)
+    {
+        $baseDescription = $setting['site_description'];
+
+        if ($search && $page > 1) {
+            // Search with pagination
+            return "Discover {$search} coloring pages on page {$page}. Browse through our collection of free printable coloring sheets perfect for kids and adults.";
+        } elseif ($search) {
+            // Search only
+            $resultText = $total > 0 ? "Found {$total} " : "Search for ";
+            return "{$resultText}{$search} coloring pages. Free printable coloring sheets for kids and adults. Download and print instantly!";
+        } elseif ($page > 1) {
+            // Pagination only
+            return "Browse free coloring pages on page {$page}. Discover hundreds of printable coloring sheets for kids and adults. Download instantly!";
+        } else {
+            // Default home page
+            return $baseDescription ?: "Free printable coloring pages for kids and adults. Download and print instantly from our huge collection of fun designs!";
+        }
     }
 
     public function download($id)
