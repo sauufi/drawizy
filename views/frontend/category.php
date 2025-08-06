@@ -1,4 +1,4 @@
-<!-- Fun Breadcrumb -->
+<!-- Fun Breadcrumb with Parent-Child Support -->
 <nav class="mb-6" aria-label="Breadcrumb">
     <div class="bg-gradient-to-r from-pink-100 to-purple-100 rounded-full p-3 border-4 border-white shadow-lg inline-flex">
         <ol class="flex items-center space-x-2 text-sm font-semibold">
@@ -9,8 +9,21 @@
                 </a>
             </li>
             <li class="text-gray-400 text-lg">→</li>
+
+            <!-- Parent Category (if exists) -->
+            <?php if (!empty($category['parent_name']) && !empty($category['parent_slug'])): ?>
+                <li>
+                    <a href="/category/<?= $category['parent_slug'] ?>" class="text-purple-600 hover:text-pink-500 transition-colors flex items-center space-x-1 bounce-soft">
+                        <span>📁</span>
+                        <span><?= htmlspecialchars($category['parent_name']) ?></span>
+                    </a>
+                </li>
+                <li class="text-gray-400 text-lg">→</li>
+            <?php endif; ?>
+
+            <!-- Current Category -->
             <li class="text-gray-600 flex items-center space-x-1">
-                <span>🎨</span>
+                <span><?= $category['level'] == 0 ? '📁' : '🎨' ?></span>
                 <span><?= htmlspecialchars($category['name']) ?></span>
             </li>
         </ol>
@@ -28,14 +41,61 @@
         <div class="absolute bottom-4 right-4 text-3xl animate-bounce opacity-50" style="animation-delay: 0.5s;">🎈</div>
 
         <h1 class="text-4xl md:text-5xl font-kids text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 mb-4">
-            🎨 <?= htmlspecialchars($category['name']) ?> Coloring Pages! 🖍️
+            <?= $category['level'] == 0 ? '📁' : '🎨' ?> <?= htmlspecialchars($category['name']) ?> Coloring Pages! 🖍️
         </h1>
         <div class="w-32 h-2 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 mx-auto rounded-full mb-4"></div>
-        <p class="text-xl text-gray-700 font-semibold">
-            ✨ Discover amazing coloring adventures in this category! ✨
-        </p>
+
+        <!-- Category Type Indicator -->
+        <?php if ($category['level'] == 0): ?>
+            <p class="text-xl text-gray-700 font-semibold mb-2">
+                ✨ Discover amazing coloring adventures in this main category! ✨
+            </p>
+            <p class="text-lg text-purple-600 font-bold">
+                📋 Showing images from all subcategories below! 📋
+            </p>
+        <?php else: ?>
+            <p class="text-xl text-gray-700 font-semibold">
+                ✨ Discover amazing coloring adventures in this category! ✨
+            </p>
+        <?php endif; ?>
     </div>
 </div>
+
+<!-- Child Categories Section (only for parent categories) -->
+<?php if ($category['level'] == 0 && !empty($relatedCategories)): ?>
+    <div class="mb-12">
+        <div class="text-center mb-6">
+            <h2 class="text-3xl font-kids text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-2">
+                🗂️ Browse by Subcategory 🗂️
+            </h2>
+            <p class="text-gray-600 font-semibold">Choose a specific subcategory or scroll down to see all images!</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+            <?php foreach ($relatedCategories as $child): ?>
+                <a href="/category/<?= $child['slug'] ?>" class="group bg-white shadow-lg rounded-2xl p-4 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-4 border-transparent hover:border-pink-200">
+                    <div class="text-4xl mb-2 group-hover:animate-bounce"><?= getChildCategoryEmoji($child['name']) ?></div>
+                    <h3 class="font-bold text-gray-700 group-hover:text-purple-600 transition-colors text-sm md:text-base mb-1">
+                        <?= htmlspecialchars($child['name']) ?>
+                    </h3>
+                    <p class="text-xs text-gray-500 mb-2"><?= $child['image_count'] ?> images</p>
+                    <div class="opacity-0 group-hover:opacity-100 transition-all duration-300">
+                        <span class="inline-block bg-gradient-to-r from-pink-400 to-purple-400 text-white text-xs px-3 py-1 rounded-full font-bold">
+                            Explore! 🚀
+                        </span>
+                    </div>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Divider -->
+        <div class="flex items-center justify-center mb-8">
+            <div class="flex-1 h-1 bg-gradient-to-r from-pink-300 to-purple-300 rounded"></div>
+            <div class="px-4 text-2xl">🎨</div>
+            <div class="flex-1 h-1 bg-gradient-to-l from-pink-300 to-purple-300 rounded"></div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <!-- Fun Search Bar -->
 <div class="max-w-2xl mx-auto mb-8">
@@ -83,6 +143,20 @@
     </div>
 <?php endif; ?>
 
+<!-- Images Grid Title -->
+<div class="text-center mb-6">
+    <?php if ($category['level'] == 0): ?>
+        <h2 class="text-2xl md:text-3xl font-kids text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-2">
+            🎨 All <?= htmlspecialchars($category['name']) ?> Coloring Pages 🎨
+        </h2>
+        <p class="text-gray-600 font-semibold">Images from all subcategories combined!</p>
+    <?php else: ?>
+        <h2 class="text-2xl md:text-3xl font-kids text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">
+            🎨 <?= htmlspecialchars($category['name']) ?> Coloring Pages 🎨
+        </h2>
+    <?php endif; ?>
+</div>
+
 <!-- Coloring Pages Grid -->
 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
     <?php foreach ($images as $img): ?>
@@ -98,21 +172,37 @@
                 <div class="absolute top-2 left-2 text-xl opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse" style="animation-delay: 0.2s;">✨</div>
                 <div class="absolute bottom-2 right-2 text-xl opacity-0 group-hover:opacity-100 transition-all duration-300 animate-bounce" style="animation-delay: 0.4s;">🌈</div>
 
-                <!-- Color palette indicator -->
-                <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <div class="flex space-x-1">
-                        <div class="w-3 h-3 bg-red-400 rounded-full"></div>
-                        <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
-                        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
-                        <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                <!-- Category indicator for parent categories showing mixed content -->
+                <?php if ($category['level'] == 0 && !empty($img['parent_category_name'])): ?>
+                    <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                        <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                            <?= htmlspecialchars($img['category_name']) ?>
+                        </span>
                     </div>
-                </div>
+                <?php else: ?>
+                    <!-- Color palette indicator -->
+                    <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                        <div class="flex space-x-1">
+                            <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="space-y-2">
                 <p class="font-bold text-gray-700 group-hover:text-purple-600 transition-colors text-sm md:text-base">
                     🎨 <?= htmlspecialchars($img['title']) ?>
                 </p>
+
+                <!-- Show subcategory name for parent category views -->
+                <?php if ($category['level'] == 0 && !empty($img['category_name']) && $img['category_name'] !== $category['name']): ?>
+                    <p class="text-xs text-purple-600 font-semibold opacity-75">
+                        from <?= htmlspecialchars($img['category_name']) ?>
+                    </p>
+                <?php endif; ?>
 
                 <!-- Action button that appears on hover -->
                 <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
@@ -136,6 +226,26 @@
         </a>
     <?php endforeach; ?>
 </div>
+
+<!-- No Images Message -->
+<?php if (empty($images)): ?>
+    <div class="text-center py-12">
+        <div class="text-8xl mb-4">😢</div>
+        <h3 class="text-2xl font-kids text-purple-600 mb-2">Oops! No coloring pages found!</h3>
+        <p class="text-gray-600 font-semibold mb-4">
+            <?php if ($search): ?>
+                Try a different search term or browse all pages below.
+            <?php else: ?>
+                This category doesn't have any coloring pages yet, but check back soon!
+            <?php endif; ?>
+        </p>
+        <?php if ($search): ?>
+            <a href="/category/<?= $category['slug'] ?>" class="inline-block bg-gradient-to-r from-pink-400 to-purple-500 text-white font-bold py-3 px-6 rounded-full hover:from-pink-500 hover:to-purple-600 transition-all shadow-lg">
+                See All Pages
+            </a>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
 
 <!-- Fun Pagination -->
 <?php if ($totalPages > 1): ?>
@@ -182,7 +292,13 @@
             <div class="bg-white rounded-xl p-4 shadow-md">
                 <div class="text-3xl mb-2">📄</div>
                 <p class="text-2xl font-bold text-purple-600"><?= count($images) ?></p>
-                <p class="text-sm text-gray-600 font-semibold">Pages Available</p>
+                <p class="text-sm text-gray-600 font-semibold">
+                    <?php if ($currentPage > 1): ?>
+                        On This Page
+                    <?php else: ?>
+                        Pages Available
+                    <?php endif; ?>
+                </p>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-md">
                 <div class="text-3xl mb-2">🎨</div>
@@ -202,6 +318,15 @@
         </div>
     </div>
 </div>
+
+<!-- Back to Parent Category (for child categories) -->
+<?php if ($category['level'] == 1 && !empty($category['parent_name'])): ?>
+    <div class="text-center mt-8">
+        <a href="/category/<?= $category['parent_slug'] ?>" class="inline-block bg-gradient-to-r from-green-400 via-teal-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full hover:from-green-500 hover:via-teal-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            📁 Browse All <?= htmlspecialchars($category['parent_name']) ?> Categories! 🌟
+        </a>
+    </div>
+<?php endif; ?>
 
 <style>
     .bounce-soft:hover {
@@ -250,3 +375,27 @@
         }
     }
 </style>
+
+<?php
+// Helper function for child category emojis
+function getChildCategoryEmoji($categoryName)
+{
+    $name = strtolower($categoryName);
+    if (strpos($name, 'animal') !== false) return '🐾';
+    if (strpos($name, 'car') !== false || strpos($name, 'vehicle') !== false) return '🚗';
+    if (strpos($name, 'flower') !== false || strpos($name, 'plant') !== false) return '🌸';
+    if (strpos($name, 'princess') !== false) return '👸';
+    if (strpos($name, 'superhero') !== false) return '🦸';
+    if (strpos($name, 'food') !== false) return '🍎';
+    if (strpos($name, 'space') !== false) return '🚀';
+    if (strpos($name, 'ocean') !== false || strpos($name, 'sea') !== false) return '🌊';
+    if (strpos($name, 'farm') !== false) return '🚜';
+    if (strpos($name, 'wild') !== false) return '🦁';
+    if (strpos($name, 'pet') !== false) return '🐕';
+    if (strpos($name, 'birthday') !== false) return '🎂';
+    if (strpos($name, 'christmas') !== false) return '🎄';
+    if (strpos($name, 'halloween') !== false) return '🎃';
+    if (strpos($name, 'easter') !== false) return '🐰';
+    return '🎨'; // default emoji
+}
+?>

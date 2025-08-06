@@ -158,6 +158,103 @@ class Image
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Get images for a category, including child categories if it's a parent category
+     * This is the key method for showing parent category images with child category content
+     */
+    public static function getByCategoryWithChildren($categoryId, $categoryLevel, $search = '', $page = 1, $perPage = 12)
+    {
+        $db = Database::getInstance();
+        $offset = ($page - 1) * $perPage;
+        $perPage = (int)$perPage;
+        $offset = (int)$offset;
+
+        if ($categoryLevel == 0) {
+            // Parent category - get images from this category AND all child categories
+            $sql = "SELECT i.*, 
+                           c.name as category_name,
+                           c.slug as category_slug,
+                           p.name as parent_category_name,
+                           p.slug as parent_category_slug
+                    FROM images i 
+                    LEFT JOIN categories c ON i.category_id = c.id
+                    LEFT JOIN categories p ON c.parent_id = p.id
+                    WHERE (c.id = ? OR c.parent_id = ?)";
+
+            $params = [$categoryId, $categoryId];
+
+            if ($search) {
+                $sql .= " AND i.title LIKE ?";
+                $params[] = "%$search%";
+            }
+
+            $sql .= " ORDER BY i.created_at DESC LIMIT $perPage OFFSET $offset";
+        } else {
+            // Child category - get images only from this category
+            $sql = "SELECT i.*, 
+                           c.name as category_name,
+                           c.slug as category_slug,
+                           p.name as parent_category_name,
+                           p.slug as parent_category_slug
+                    FROM images i 
+                    LEFT JOIN categories c ON i.category_id = c.id
+                    LEFT JOIN categories p ON c.parent_id = p.id
+                    WHERE i.category_id = ?";
+
+            $params = [$categoryId];
+
+            if ($search) {
+                $sql .= " AND i.title LIKE ?";
+                $params[] = "%$search%";
+            }
+
+            $sql .= " ORDER BY i.created_at DESC LIMIT $perPage OFFSET $offset";
+        }
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get total count for category with children support
+     */
+    public static function getCountByCategoryWithChildren($categoryId, $categoryLevel, $search = '')
+    {
+        $db = Database::getInstance();
+
+        if ($categoryLevel == 0) {
+            // Parent category - count images from this category AND all child categories
+            $sql = "SELECT COUNT(*) as total
+                    FROM images i 
+                    LEFT JOIN categories c ON i.category_id = c.id
+                    WHERE (c.id = ? OR c.parent_id = ?)";
+
+            $params = [$categoryId, $categoryId];
+
+            if ($search) {
+                $sql .= " AND i.title LIKE ?";
+                $params[] = "%$search%";
+            }
+        } else {
+            // Child category - count images only from this category
+            $sql = "SELECT COUNT(*) as total
+                    FROM images i 
+                    WHERE i.category_id = ?";
+
+            $params = [$categoryId];
+
+            if ($search) {
+                $sql .= " AND i.title LIKE ?";
+                $params[] = "%$search%";
+            }
+        }
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
     public static function getRelated($categoryId, $excludeId, $limit = 4)
     {
         $db = Database::getInstance();

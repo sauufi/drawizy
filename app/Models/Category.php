@@ -163,6 +163,8 @@ class Category
     public static function findByLimit($limit = 10)
     {
         $db = Database::getInstance();
+        $limit = (int)$limit; // Cast to integer to prevent SQL injection and syntax errors
+
         $sql = "SELECT c.*,
                     (SELECT COUNT(*) FROM images i 
                      JOIN categories child ON i.category_id = child.id 
@@ -170,10 +172,10 @@ class Category
                 FROM categories c 
                 WHERE c.level = 0 
                 ORDER BY c.sort_order 
-                LIMIT ?";
+                LIMIT {$limit}";
 
         $stmt = $db->prepare($sql);
-        $stmt->execute([$limit]);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

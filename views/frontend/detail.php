@@ -9,6 +9,19 @@
                 </a>
             </li>
             <li class="text-gray-400 text-lg">→</li>
+
+            <!-- Parent Category (if exists) -->
+            <?php if (!empty($image['parent_category_name']) && !empty($image['parent_category_slug'])): ?>
+                <li>
+                    <a href="/category/<?= $image['parent_category_slug'] ?>" class="text-purple-600 hover:text-pink-500 transition-colors flex items-center space-x-1 bounce-soft">
+                        <span>📁</span>
+                        <span><?= htmlspecialchars($image['parent_category_name']) ?></span>
+                    </a>
+                </li>
+                <li class="text-gray-400 text-lg">→</li>
+            <?php endif; ?>
+
+            <!-- Current Category -->
             <li>
                 <a href="/category/<?= $image['category_slug'] ?>" class="text-purple-600 hover:text-pink-500 transition-colors flex items-center space-x-1 bounce-soft">
                     <span>🎨</span>
@@ -16,6 +29,8 @@
                 </a>
             </li>
             <li class="text-gray-400 text-lg">→</li>
+
+            <!-- Current Image -->
             <li class="text-gray-600 flex items-center space-x-1">
                 <span>✨</span>
                 <span><?= htmlspecialchars($image['title']) ?></span>
@@ -100,12 +115,33 @@
                     ✨ <?= htmlspecialchars($image['title']) ?> ✨
                 </h1>
                 <div class="w-24 h-1 bg-gradient-to-r from-pink-400 to-purple-500 mx-auto rounded-full mb-4"></div>
-                <p class="text-center text-gray-700 font-semibold text-lg">
-                    Category:
-                    <a href="/category/<?= $image['category_slug'] ?>" class="text-purple-600 hover:text-pink-500 transition-colors font-bold hover:underline decoration-wavy">
-                        🎨 <?= htmlspecialchars($image['category_name']) ?>
-                    </a>
-                </p>
+
+                <!-- Category Path -->
+                <div class="text-center text-gray-700 font-semibold text-lg">
+                    <?php if (!empty($image['parent_category_name'])): ?>
+                        <!-- Parent > Child structure -->
+                        <div class="flex items-center justify-center space-x-2 mb-2">
+                            <span>📂 Category Path:</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2 text-base">
+                            <a href="/category/<?= $image['parent_category_slug'] ?>" class="text-purple-600 hover:text-pink-500 transition-colors font-bold hover:underline decoration-wavy">
+                                📁 <?= htmlspecialchars($image['parent_category_name']) ?>
+                            </a>
+                            <span class="text-gray-400">→</span>
+                            <a href="/category/<?= $image['category_slug'] ?>" class="text-purple-600 hover:text-pink-500 transition-colors font-bold hover:underline decoration-wavy">
+                                🎨 <?= htmlspecialchars($image['category_name']) ?>
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <!-- Single category -->
+                        <div>
+                            Category:
+                            <a href="/category/<?= $image['category_slug'] ?>" class="text-purple-600 hover:text-pink-500 transition-colors font-bold hover:underline decoration-wavy">
+                                🎨 <?= htmlspecialchars($image['category_name']) ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <!-- Fun Facts Card -->
@@ -195,11 +231,22 @@
             <?php endforeach; ?>
         </div>
 
-        <!-- View More Button -->
+        <!-- View More Button with dynamic text based on category hierarchy -->
         <div class="text-center mt-8">
-            <a href="/category/<?= $image['category_slug'] ?>" class="inline-block bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full hover:from-pink-500 hover:via-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                🎨 See All <?= htmlspecialchars($image['category_name']) ?> Pages! ✨
-            </a>
+            <?php if (!empty($image['parent_category_name'])): ?>
+                <!-- Show parent category link when in child category -->
+                <a href="/category/<?= $image['category_slug'] ?>" class="inline-block bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full hover:from-pink-500 hover:via-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 mr-4">
+                    🎨 See All <?= htmlspecialchars($image['category_name']) ?> Pages! ✨
+                </a>
+                <a href="/category/<?= $image['parent_category_slug'] ?>" class="inline-block bg-gradient-to-r from-green-400 via-teal-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full hover:from-green-500 hover:via-teal-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    📁 Browse All <?= htmlspecialchars($image['parent_category_name']) ?> Categories! 🌟
+                </a>
+            <?php else: ?>
+                <!-- Show single category link -->
+                <a href="/category/<?= $image['category_slug'] ?>" class="inline-block bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 text-white font-bold py-4 px-8 rounded-full hover:from-pink-500 hover:via-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    🎨 See All <?= htmlspecialchars($image['category_name']) ?> Pages! ✨
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 <?php endif; ?>
