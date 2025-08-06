@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <div class="flex items-center space-x-4 mb-4">
-                    <a href="/admin/pages"
+                    <a href="/dashboard/pages"
                         class="bg-gray-100 hover:bg-gray-200 text-gray-700 p-3 rounded-xl transition-all duration-300 transform hover:scale-105"
                         title="Back to Pages">
                         <i class="fas fa-arrow-left"></i>
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Create Page Form -->
-    <form action="/admin/pages" method="post" id="pageForm" class="space-y-8">
+    <form action="/dashboard/pages" method="post" id="pageForm" class="space-y-8">
         <!-- Basic Information Section -->
         <div class="bg-white kids-shadow rounded-2xl p-8">
             <div class="mb-6">
@@ -61,7 +61,7 @@
                         <span>Page URL (Slug)</span>
                     </label>
                     <div class="flex items-center space-x-2">
-                        <span class="text-gray-500 text-sm">yoursite.com/page/</span>
+                        <span class="text-gray-500 text-sm">drawizy.com/page/</span>
                         <input type="text"
                             name="slug"
                             id="pageSlug"

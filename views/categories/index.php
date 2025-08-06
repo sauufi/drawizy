@@ -73,7 +73,7 @@
                 <p class="text-purple-100">Add parent categories or subcategories to organize your content</p>
             </div>
         </div>
-        <a href="/admin/categories/create"
+        <a href="/dashboard/categories/create"
             class="bg-white text-purple-600 px-6 py-3 rounded-2xl font-semibold hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 kids-shadow flex items-center space-x-2">
             <i class="fas fa-plus"></i>
             <span>Add Category</span>
@@ -188,11 +188,11 @@
                                     class="text-blue-500 hover:text-blue-700 p-2 rounded-lg hover:bg-blue-50 transition-all" title="View Category">
                                     <i class="fas fa-external-link-alt"></i>
                                 </a>
-                                <a href="/admin/categories/edit/<?= $c['id'] ?>"
+                                <a href="/dashboard/categories/edit/<?= $c['id'] ?>"
                                     class="text-green-500 hover:text-green-700 p-2 rounded-lg hover:bg-green-50 transition-all" title="Edit Category">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="/admin/categories/delete/<?= $c['id'] ?>"
+                                <a href="/dashboard/categories/delete/<?= $c['id'] ?>"
                                     class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-all" title="Delete Category"
                                     onclick="return confirm('⚠️ Delete this parent category?\n\nAll child categories will become parent categories.\nImages will remain in their current child categories.')">
                                     <i class="fas fa-trash"></i>
@@ -253,11 +253,11 @@
                                                         class="text-blue-500 hover:text-blue-700 p-1 rounded hover:bg-blue-50 transition-all text-sm" title="View Child Category">
                                                         <i class="fas fa-external-link-alt"></i>
                                                     </a>
-                                                    <a href="/admin/categories/edit/<?= $child['id'] ?>"
+                                                    <a href="/dashboard/categories/edit/<?= $child['id'] ?>"
                                                         class="text-green-500 hover:text-green-700 p-1 rounded hover:bg-green-50 transition-all text-sm" title="Edit Child Category">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <a href="/admin/categories/delete/<?= $child['id'] ?>"
+                                                    <a href="/dashboard/categories/delete/<?= $child['id'] ?>"
                                                         class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-all text-sm" title="Delete Child Category"
                                                         onclick="return confirm('Delete child category \'<?= htmlspecialchars($child['name']) ?>\'?\n\nImages in this category will be moved to the parent category.')">
                                                         <i class="fas fa-trash"></i>
@@ -282,7 +282,7 @@
                         <h3 class="text-lg font-semibold mb-2">No categories yet</h3>
                         <p>Start by creating your first category for coloring pictures!</p>
                     </div>
-                    <a href="/admin/categories/create"
+                    <a href="/dashboard/categories/create"
                         class="inline-block mt-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 kids-shadow">
                         <i class="fas fa-plus mr-2"></i>
                         Create First Category
@@ -307,7 +307,7 @@
                 </div>
             </div>
             <div class="flex space-x-3">
-                <a href="/admin/categories/create" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">
+                <a href="/dashboard/categories/create" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">
                     <i class="fas fa-plus mr-1"></i> Add Category
                 </a>
                 <button onclick="exportCategories()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all">

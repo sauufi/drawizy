@@ -44,19 +44,19 @@ class TagController
 
         if (empty($name)) {
             $_SESSION['error'] = "Tag name is required!";
-            header("Location: /admin/tags/create");
+            header("Location: /dashboard/tags/create");
             exit;
         }
 
         if (strlen($name) < 2) {
             $_SESSION['error'] = "Tag name must be at least 2 characters long!";
-            header("Location: /admin/tags/create");
+            header("Location: /dashboard/tags/create");
             exit;
         }
 
         if (strlen($name) > 50) {
             $_SESSION['error'] = "Tag name cannot be longer than 50 characters!";
-            header("Location: /admin/tags/create");
+            header("Location: /dashboard/tags/create");
             exit;
         }
 
@@ -64,7 +64,7 @@ class TagController
         $existing = Tag::findByName($name);
         if ($existing) {
             $_SESSION['error'] = "Tag '{$name}' already exists!";
-            header("Location: /admin/tags/create");
+            header("Location: /dashboard/tags/create");
             exit;
         }
 
@@ -76,7 +76,7 @@ class TagController
             $_SESSION['error'] = "Failed to create tag!";
         }
 
-        header("Location: /admin/tags");
+        header("Location: /dashboard/tags");
         exit;
     }
 
@@ -90,7 +90,7 @@ class TagController
         $tag = Tag::find($id);
         if (!$tag) {
             $_SESSION['error'] = "Tag not found!";
-            header("Location: /admin/tags");
+            header("Location: /dashboard/tags");
             exit;
         }
 
@@ -107,7 +107,7 @@ class TagController
         $tag = Tag::find($id);
         if (!$tag) {
             $_SESSION['error'] = "Tag not found!";
-            header("Location: /admin/tags");
+            header("Location: /dashboard/tags");
             exit;
         }
 
@@ -116,19 +116,19 @@ class TagController
 
         if (empty($name)) {
             $_SESSION['error'] = "Tag name is required!";
-            header("Location: /admin/tags/{$id}/edit");
+            header("Location: /dashboard/tags/{$id}/edit");
             exit;
         }
 
         if (strlen($name) < 2) {
             $_SESSION['error'] = "Tag name must be at least 2 characters long!";
-            header("Location: /admin/tags/{$id}/edit");
+            header("Location: /dashboard/tags/{$id}/edit");
             exit;
         }
 
         if (strlen($name) > 50) {
             $_SESSION['error'] = "Tag name cannot be longer than 50 characters!";
-            header("Location: /admin/tags/{$id}/edit");
+            header("Location: /dashboard/tags/{$id}/edit");
             exit;
         }
 
@@ -136,7 +136,7 @@ class TagController
         $existing = Tag::findByName($name);
         if ($existing && $existing['id'] != $id) {
             $_SESSION['error'] = "Another tag with name '{$name}' already exists!";
-            header("Location: /admin/tags/{$id}/edit");
+            header("Location: /dashboard/tags/{$id}/edit");
             exit;
         }
 
@@ -148,7 +148,7 @@ class TagController
             $_SESSION['error'] = "Failed to update tag!";
         }
 
-        header("Location: /admin/tags");
+        header("Location: /dashboard/tags");
         exit;
     }
 
@@ -162,7 +162,7 @@ class TagController
         $tag = Tag::find($id);
         if (!$tag) {
             $_SESSION['error'] = "Tag not found!";
-            header("Location: /admin/tags");
+            header("Location: /dashboard/tags");
             exit;
         }
 
@@ -174,7 +174,7 @@ class TagController
             $_SESSION['error'] = "Failed to delete tag!";
         }
 
-        header("Location: /admin/tags");
+        header("Location: /dashboard/tags");
         exit;
     }
 
@@ -226,7 +226,7 @@ class TagController
 
         if (empty($unusedTags)) {
             $_SESSION['info'] = "No unused tags found!";
-            header("Location: /admin/tags");
+            header("Location: /dashboard/tags");
             exit;
         }
 
@@ -244,7 +244,7 @@ class TagController
             $_SESSION['error'] = "Failed to delete unused tags!";
         }
 
-        header("Location: /admin/tags");
+        header("Location: /dashboard/tags");
         exit;
     }
 
@@ -260,7 +260,7 @@ class TagController
 
         if (empty($sourceTagIds) || !$targetTagId) {
             $_SESSION['error'] = "Please select source tags and target tag!";
-            header("Location: /admin/tags");
+            header("Location: /dashboard/tags");
             exit;
         }
 
@@ -294,7 +294,7 @@ class TagController
             $_SESSION['error'] = "Failed to merge tags!";
         }
 
-        header("Location: /admin/tags");
+        header("Location: /dashboard/tags");
         exit;
     }
 
@@ -308,7 +308,7 @@ class TagController
         $tag = Tag::find($id);
         if (!$tag) {
             $_SESSION['error'] = "Tag not found!";
-            header("Location: /admin/tags");
+            header("Location: /dashboard/tags");
             exit;
         }
 

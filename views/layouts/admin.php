@@ -67,23 +67,23 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         <a href="/admin" class="nav-item text-white hover:text-yellow-200">
                             <i class="fas fa-home mr-2"></i>Dashboard
                         </a>
-                        <a href="/admin/categories" class="nav-item text-white hover:text-yellow-200">
+                        <a href="/dashboard/categories" class="nav-item text-white hover:text-yellow-200">
                             <i class="fas fa-tags mr-2"></i>Categories
                         </a>
-                        <a href="/admin/images" class="nav-item text-white hover:text-yellow-200">
+                        <a href="/dashboard/images" class="nav-item text-white hover:text-yellow-200">
                             <i class="fas fa-images mr-2"></i>Images
                         </a>
-                        <a href="/admin/change-password" class="nav-item text-white hover:text-yellow-200">
+                        <a href="/dashboard/change-password" class="nav-item text-white hover:text-yellow-200">
                             <i class="fas fa-key mr-2"></i>Password
                         </a>
                         <?php if ($_SESSION['role'] === 'admin'): ?>
-                            <a href="/admin/settings" class="nav-item text-white hover:text-yellow-200">
+                            <a href="/dashboard/settings" class="nav-item text-white hover:text-yellow-200">
                                 <i class="fas fa-cog mr-2"></i>Settings
                             </a>
-                            <a href="/admin/pages" class="nav-item text-white hover:text-yellow-200">
+                            <a href="/dashboard/pages" class="nav-item text-white hover:text-yellow-200">
                                 <i class="fas fa-file-alt mr-2"></i>Pages
                             </a>
-                            <a href="/admin/users" class="nav-item text-white hover:text-yellow-200">
+                            <a href="/dashboard/users" class="nav-item text-white hover:text-yellow-200">
                                 <i class="fas fa-users mr-2"></i>Users
                             </a>
                         <?php endif; ?>

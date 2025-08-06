@@ -55,7 +55,7 @@ class ImageController
             }
         }
 
-        header("Location: /admin/images");
+        header("Location: /dashboard/images");
         exit;
     }
 
@@ -179,7 +179,7 @@ class ImageController
             Tag::setForImage($id, $tagIds);
         }
 
-        header("Location: /admin/images");
+        header("Location: /dashboard/images");
     }
 
     public function checkSlug()
@@ -201,7 +201,7 @@ class ImageController
         // Then delete the image
         Image::delete($id);
 
-        header("Location: /admin/images");
+        header("Location: /dashboard/images");
         exit;
     }
 

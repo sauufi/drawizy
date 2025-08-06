@@ -20,7 +20,7 @@
             <p class="text-gray-600 mt-2">Create a new user account with appropriate permissions</p>
         </div>
 
-        <form action="/admin/users" method="post" class="space-y-6" id="userForm">
+        <form action="/dashboard/users" method="post" class="space-y-6" id="userForm">
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Username Field -->
                 <div class="form-field">
@@ -317,7 +317,7 @@
             deleteBtn.disabled = true;
 
             // Redirect to delete URL
-            window.location.href = `/admin/users/delete/${userId}`;
+            window.location.href = `/dashboard/users/delete/${userId}`;
         }
     }
 

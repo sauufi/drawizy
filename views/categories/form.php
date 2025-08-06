@@ -25,7 +25,7 @@
 
         <!-- Form Content -->
         <div class="p-8">
-            <form action="/admin/categories/store" method="post" class="space-y-6" id="categoryForm">
+            <form action="/dashboard/categories/store" method="post" class="space-y-6" id="categoryForm">
 
                 <!-- Category Type Selection -->
                 <div class="group">
@@ -179,7 +179,7 @@
                     <div class="bg-white rounded-xl p-4 kids-shadow">
                         <div class="text-sm text-gray-600 mb-2">Your category will be accessible at:</div>
                         <div class="font-mono text-indigo-600 text-lg" id="urlPreview">
-                            <?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>/category-slug
+                            <?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>/category-slug
                         </div>
                         <div class="text-xs text-gray-500 mt-2" id="urlStructure">
                             Structure: Parent Category (if selected) > Category Name
@@ -212,7 +212,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <a href="/admin/categories"
+                    <a href="/dashboard/categories"
                         class="inline-flex items-center space-x-2 px-6 py-3 bg-gray-500 text-white rounded-2xl hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 kids-shadow">
                         <i class="fas fa-arrow-left"></i>
                         <span>Back to Categories</span>
@@ -513,7 +513,7 @@
             const slug = slugInput.value.trim();
             const parentValue = parentSelect.value;
             const parentText = parentSelect.options[parentSelect.selectedIndex]?.text || '';
-            const baseUrl = '<?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>';
+            const baseUrl = '<?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>';
 
             if (parentValue && parentText) {
                 // Child category URL structure

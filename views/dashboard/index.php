@@ -138,25 +138,25 @@
 
 <!-- Quick Actions -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <a href="/admin/images/add" class="group bg-white rounded-2xl p-6 kids-shadow hover-bounce text-center transition-all duration-300 hover:bg-gradient-to-br hover:from-pink-500 hover:to-purple-600 hover:text-white">
+    <a href="/dashboard/images/add" class="group bg-white rounded-2xl p-6 kids-shadow hover-bounce text-center transition-all duration-300 hover:bg-gradient-to-br hover:from-pink-500 hover:to-purple-600 hover:text-white">
         <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎨</div>
         <h3 class="font-semibold text-gray-800 group-hover:text-white">Add Image</h3>
         <p class="text-sm text-gray-600 group-hover:text-purple-100 mt-1">Upload new image</p>
     </a>
 
-    <a href="/admin/categories/add" class="group bg-white rounded-2xl p-6 kids-shadow hover-bounce text-center transition-all duration-300 hover:bg-gradient-to-br hover:from-blue-500 hover:to-cyan-600 hover:text-white">
+    <a href="/dashboard/categories/add" class="group bg-white rounded-2xl p-6 kids-shadow hover-bounce text-center transition-all duration-300 hover:bg-gradient-to-br hover:from-blue-500 hover:to-cyan-600 hover:text-white">
         <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">📂</div>
         <h3 class="font-semibold text-gray-800 group-hover:text-white">Add Category</h3>
         <p class="text-sm text-gray-600 group-hover:text-blue-100 mt-1">New Category</p>
     </a>
 
-    <a href="/admin/settings" class="group bg-white rounded-2xl p-6 kids-shadow hover-bounce text-center transition-all duration-300 hover:bg-gradient-to-br hover:from-green-500 hover:to-emerald-600 hover:text-white">
+    <a href="/dashboard/settings" class="group bg-white rounded-2xl p-6 kids-shadow hover-bounce text-center transition-all duration-300 hover:bg-gradient-to-br hover:from-green-500 hover:to-emerald-600 hover:text-white">
         <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">⚙️</div>
         <h3 class="font-semibold text-gray-800 group-hover:text-white">Settings</h3>
         <p class="text-sm text-gray-600 group-hover:text-green-100 mt-1">System Configuration</p>
     </a>
 
-    <a href="/admin/users" class="group bg-white rounded-2xl p-6 kids-shadow hover-bounce text-center transition-all duration-300 hover:bg-gradient-to-br hover:from-yellow-500 hover:to-orange-600 hover:text-white">
+    <a href="/dashboard/users" class="group bg-white rounded-2xl p-6 kids-shadow hover-bounce text-center transition-all duration-300 hover:bg-gradient-to-br hover:from-yellow-500 hover:to-orange-600 hover:text-white">
         <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">👥</div>
         <h3 class="font-semibold text-gray-800 group-hover:text-white">Manage Users</h3>
         <p class="text-sm text-gray-600 group-hover:text-yellow-100 mt-1">User Management</p>

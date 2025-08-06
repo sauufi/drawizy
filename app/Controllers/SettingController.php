@@ -30,7 +30,7 @@ class SettingController
         }
 
         \App\Models\Setting::update($title, $desc, $logo);
-        header("Location: /admin/settings");
+        header("Location: /dashboard/settings");
     }
 
     private function checkAuth()

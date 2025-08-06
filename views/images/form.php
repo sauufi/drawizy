@@ -74,7 +74,7 @@ $parentCategories = Category::getParents();
 
         <!-- Form Content -->
         <div class="p-8">
-            <form method="post" action="/admin/images/multiple" enctype="multipart/form-data" id="uploadForm" class="space-y-8">
+            <form method="post" action="/dashboard/images/multiple" enctype="multipart/form-data" id="uploadForm" class="space-y-8">
 
                 <!-- Category Selection Section -->
                 <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border-2 border-dashed border-purple-200">
@@ -376,7 +376,7 @@ $parentCategories = Category::getParents();
 
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <a href="/admin/images"
+                    <a href="/dashboard/images"
                         class="inline-flex items-center space-x-2 px-6 py-3 bg-gray-500 text-white rounded-2xl hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 kids-shadow">
                         <i class="fas fa-arrow-left"></i>
                         <span>Back to Images</span>
@@ -616,7 +616,7 @@ function getCategoryEmoji($name)
     // Function to fetch child categories from database
     async function fetchChildCategories(parentId) {
         try {
-            const response = await fetch(`/admin/categories/children/${parentId}`, {
+            const response = await fetch(`/dashboard/categories/children/${parentId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1197,7 +1197,7 @@ function getCategoryEmoji($name)
                         showMessage(`🎉 Successfully uploaded ${response.uploaded.length} coloring pages with interactive tags!`, 'success');
 
                         setTimeout(() => {
-                            window.location.href = '/admin/images';
+                            window.location.href = '/dashboard/images';
                         }, 2000);
                     } else {
                         throw new Error(response.message || 'Upload failed');

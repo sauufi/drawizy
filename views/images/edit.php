@@ -112,7 +112,7 @@
 
         <!-- Form Content -->
         <div class="p-8">
-            <form action="/admin/images/update/<?= $image['id'] ?>" method="post" enctype="multipart/form-data" id="editForm" class="space-y-8">
+            <form action="/dashboard/images/update/<?= $image['id'] ?>" method="post" enctype="multipart/form-data" id="editForm" class="space-y-8">
 
                 <!-- Title Field -->
                 <div class="group">
@@ -422,13 +422,13 @@
                         <div class="bg-white rounded-xl p-4 kids-shadow">
                             <div class="text-sm text-gray-600 mb-2">Current URL:</div>
                             <div class="font-mono text-gray-500 text-lg" id="currentUrl">
-                                <?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>/image/<?= $image['slug'] ?>
+                                <?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>/image/<?= $image['slug'] ?>
                             </div>
                         </div>
                         <div class="bg-white rounded-xl p-4 kids-shadow">
                             <div class="text-sm text-gray-600 mb-2">New URL will be:</div>
                             <div class="font-mono text-blue-600 text-lg" id="newUrl">
-                                <?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>/image/<?= $image['slug'] ?>
+                                <?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>/image/<?= $image['slug'] ?>
                             </div>
                         </div>
                     </div>
@@ -436,7 +436,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <a href="/admin/images"
+                    <a href="/dashboard/images"
                         class="inline-flex items-center space-x-2 px-6 py-3 bg-gray-500 text-white rounded-2xl hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 kids-shadow">
                         <i class="fas fa-arrow-left"></i>
                         <span>Back to Images</span>
@@ -937,7 +937,7 @@
         // Update URL preview
         function updateUrlPreview() {
             const slug = slugInput.value.trim();
-            const baseUrl = '<?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>';
+            const baseUrl = '<?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>';
             newUrl.textContent = `${baseUrl}/image/${slug || 'your-slug'}`;
         }
 
@@ -947,7 +947,7 @@
             const imageId = <?= $image['id'] ?>;
 
             if (slug && slug !== originalValues.slug) {
-                fetch(`/admin/images/check-slug?slug=${encodeURIComponent(slug)}&id=${imageId}`)
+                fetch(`/dashboard/images/check-slug?slug=${encodeURIComponent(slug)}&id=${imageId}`)
                     .then(response => response.json())
                     .then(data => {
                         const warning = document.getElementById('slugWarning');

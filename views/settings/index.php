@@ -11,7 +11,7 @@
         </div>
 
         <!-- Settings Form -->
-        <form action="/admin/settings" method="post" enctype="multipart/form-data" class="space-y-8">
+        <form action="/dashboard/settings" method="post" enctype="multipart/form-data" class="space-y-8">
 
             <!-- Basic Information Section -->
             <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border-l-4 border-blue-400">

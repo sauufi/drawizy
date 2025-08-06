@@ -25,7 +25,7 @@
 
         <!-- Form Content -->
         <div class="p-8">
-            <form action="/admin/categories/update/<?= $category['id'] ?>" method="post" class="space-y-6" id="categoryEditForm">
+            <form action="/dashboard/categories/update/<?= $category['id'] ?>" method="post" class="space-y-6" id="categoryEditForm">
 
                 <!-- Current Category Info -->
                 <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200">
@@ -239,13 +239,13 @@
                         <div class="bg-white rounded-xl p-4 kids-shadow">
                             <div class="text-sm text-gray-600 mb-2">Current URL:</div>
                             <div class="font-mono text-gray-500 text-lg" id="currentUrl">
-                                <?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>/<?= $category['parent_slug'] ? $category['parent_slug'] . '/' : '' ?><?= $category['slug'] ?>
+                                <?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>/<?= $category['parent_slug'] ? $category['parent_slug'] . '/' : '' ?><?= $category['slug'] ?>
                             </div>
                         </div>
                         <div class="bg-white rounded-xl p-4 kids-shadow">
                             <div class="text-sm text-gray-600 mb-2">New URL will be:</div>
                             <div class="font-mono text-indigo-600 text-lg" id="newUrl">
-                                <?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>/<?= $category['parent_slug'] ? $category['parent_slug'] . '/' : '' ?><?= $category['slug'] ?>
+                                <?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>/<?= $category['parent_slug'] ? $category['parent_slug'] . '/' : '' ?><?= $category['slug'] ?>
                             </div>
                         </div>
                     </div>
@@ -278,7 +278,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <a href="/admin/categories"
+                    <a href="/dashboard/categories"
                         class="inline-flex items-center space-x-2 px-6 py-3 bg-gray-500 text-white rounded-2xl hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 kids-shadow">
                         <i class="fas fa-arrow-left"></i>
                         <span>Back to Categories</span>
@@ -558,7 +558,7 @@
             const slug = slugInput.value.trim();
             const parentValue = parentSelect.value;
             const parentText = parentSelect.options[parentSelect.selectedIndex]?.text || '';
-            const baseUrl = '<?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>';
+            const baseUrl = '<?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>';
 
             if (parentValue && parentText) {
                 // Child category URL structure
@@ -751,7 +751,7 @@
             document.getElementById('slugChangeWarning').classList.add('hidden');
 
             // Update URL preview
-            const baseUrl = '<?= $_SERVER['HTTP_HOST'] ?? 'yoursite.com' ?>';
+            const baseUrl = '<?= $_SERVER['HTTP_HOST'] ?? 'drawizy.com' ?>';
             if (originalValues.parent_id) {
                 // Get parent slug from original data
                 const parentSlug = '<?= $category['parent_slug'] ?? '' ?>';

@@ -25,13 +25,13 @@ class PageController
         $slug = $this->slugify($title);
 
         Page::create($title, $slug, $content);
-        header("Location: /admin/pages");
+        header("Location: /dashboard/pages");
     }
 
     public function delete($id)
     {
         Page::delete($id);
-        header("Location: /admin/pages");
+        header("Location: /dashboard/pages");
     }
 
     public function show($slug)
@@ -77,7 +77,7 @@ class PageController
         $content = $_POST['content'];
         $newSlug = \App\Models\Page::updatePage($id, $title, $slug, $content);
         $_SESSION['message'] = "Page updated successfully (slug: {$newSlug})";
-        header("Location: /admin/pages");
+        header("Location: /dashboard/pages");
     }
 
 

@@ -20,7 +20,7 @@ class AuthController
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user'] = $user['username'];
             $_SESSION['role'] = $user['role'];  // simpan role
-            header("Location: /admin");
+            header("Location: /dashboard");
             exit;
         } else {
             View::render('auth/login.php', ['error' => 'Username atau password salah'], 'layouts/admin.php');

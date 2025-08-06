@@ -102,7 +102,7 @@
                 <p class="text-purple-100">Add beautiful new images to your collection</p>
             </div>
         </div>
-        <a href="/admin/images/create"
+        <a href="/dashboard/images/create"
             class="bg-white text-purple-600 px-6 py-3 rounded-2xl font-semibold hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 kids-shadow flex items-center space-x-2">
             <i class="fas fa-plus"></i>
             <span>Upload Images</span>
@@ -267,7 +267,7 @@
                                 </a>
 
                                 <!-- Edit -->
-                                <a href="/admin/images/edit/<?= $img['id'] ?>"
+                                <a href="/dashboard/images/edit/<?= $img['id'] ?>"
                                     class="text-green-500 hover:text-green-700 p-2 rounded-lg hover:bg-green-50 transition-all tooltip"
                                     title="Edit Image">
                                     <i class="fas fa-edit"></i>
@@ -281,7 +281,7 @@
                                 </a>
 
                                 <!-- Delete -->
-                                <a href="/admin/images/delete/<?= $img['id'] ?>"
+                                <a href="/dashboard/images/delete/<?= $img['id'] ?>"
                                     class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-all tooltip"
                                     title="Delete Image"
                                     onclick="return confirm('🗑️ Delete this coloring page?\n\nTitle: <?= htmlspecialchars($img['title']) ?>\nCategory: <?= htmlspecialchars($img['category_name']) ?>\nDownloads: <?= $img['downloads'] ?>\n\nThis action cannot be undone!')">
@@ -314,7 +314,7 @@
                                         class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-colors">
                                         <i class="fas fa-external-link-alt"></i>
                                     </a>
-                                    <a href="/admin/images/edit/<?= $img['id'] ?>"
+                                    <a href="/dashboard/images/edit/<?= $img['id'] ?>"
                                         class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -352,11 +352,11 @@
 
                         <!-- Actions -->
                         <div class="flex space-x-2">
-                            <a href="/admin/images/edit/<?= $img['id'] ?>"
+                            <a href="/dashboard/images/edit/<?= $img['id'] ?>"
                                 class="flex-1 bg-blue-500 text-white text-center py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm font-semibold">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </a>
-                            <a href="/admin/images/delete/<?= $img['id'] ?>"
+                            <a href="/dashboard/images/delete/<?= $img['id'] ?>"
                                 onclick="return confirm('Delete this image?')"
                                 class="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-colors">
                                 <i class="fas fa-trash"></i>
@@ -377,7 +377,7 @@
             <h3 class="text-xl font-semibold mb-2">No coloring images yet</h3>
             <p class="mb-6">Start building your beautiful collection by uploading your first coloring page!</p>
         </div>
-        <a href="/admin/images/create"
+        <a href="/dashboard/images/create"
             class="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-4 rounded-2xl font-semibold hover:from-pink-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 kids-shadow">
             <i class="fas fa-upload mr-2"></i>
             Upload First Image
@@ -399,7 +399,7 @@
                 </div>
             </div>
             <div class="flex space-x-3">
-                <a href="/admin/images/create" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">
+                <a href="/dashboard/images/create" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">
                     <i class="fas fa-plus mr-1"></i> Add Images
                 </a>
                 <button onclick="exportImages()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all">

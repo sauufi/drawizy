@@ -31,7 +31,7 @@
         <?php endif; ?>
 
         <!-- Change Password Form -->
-        <form method="post" action="/admin/change-password" class="space-y-6">
+        <form method="post" action="/dashboard/change-password" class="space-y-6">
             <!-- Current Password Field -->
             <div class="form-field">
                 <label class="flex items-center space-x-2 text-gray-700 font-semibold mb-2">

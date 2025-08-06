@@ -22,7 +22,7 @@ class UserController
         $db = Database::getInstance();
         $stmt = $db->prepare("INSERT INTO users (username, password, role) VALUES (?,?,?)");
         $stmt->execute([$username, $password, $role]);
-        header("Location: /admin/users");
+        header("Location: /dashboard/users");
     }
 
     public function delete($id)
@@ -30,6 +30,6 @@ class UserController
         $db = Database::getInstance();
         $stmt = $db->prepare("DELETE FROM users WHERE id=?");
         $stmt->execute([$id]);
-        header("Location: /admin/users");
+        header("Location: /dashboard/users");
     }
 }

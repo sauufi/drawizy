@@ -14,7 +14,7 @@
                 <div class="text-sm text-gray-500">
                     Total Pages: <span class="font-semibold text-gray-700"><?= count($pages) ?></span>
                 </div>
-                <a href="/admin/pages/create"
+                <a href="/dashboard/pages/create"
                     class="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 kids-shadow hover:shadow-lg flex items-center space-x-2">
                     <i class="fas fa-plus"></i>
                     <span>Add New Page</span>
@@ -129,7 +129,7 @@
                                 </td>
                                 <td class="p-4">
                                     <div class="flex items-center justify-center space-x-2">
-                                        <a href="/admin/pages/edit/<?= $p['id'] ?>"
+                                        <a href="/dashboard/pages/edit/<?= $p['id'] ?>"
                                             class="bg-blue-100 hover:bg-blue-200 text-blue-700 hover:text-blue-800 font-semibold py-2 px-3 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-1"
                                             title="Edit page">
                                             <i class="fas fa-edit"></i>
@@ -192,7 +192,7 @@
                                 <span>View Live</span>
                             </a>
                             <div class="flex space-x-2">
-                                <a href="/admin/pages/edit/<?= $p['id'] ?>"
+                                <a href="/dashboard/pages/edit/<?= $p['id'] ?>"
                                     class="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded-lg transition-all duration-300 transform hover:scale-110"
                                     title="Edit page">
                                     <i class="fas fa-edit"></i>
@@ -215,7 +215,7 @@
                 <i class="fas fa-file-alt text-gray-300 text-6xl mb-4"></i>
                 <h3 class="text-xl font-semibold text-gray-600 mb-2">No Pages Found</h3>
                 <p class="text-gray-500 mb-6">Start by creating your first static page!</p>
-                <a href="/admin/pages/create"
+                <a href="/dashboard/pages/create"
                     class="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 kids-shadow hover:shadow-lg">
                     <i class="fas fa-plus mr-2"></i>
                     Create Your First Page
@@ -409,7 +409,7 @@
             deleteBtn.disabled = true;
 
             // Redirect to delete URL
-            window.location.href = `/admin/pages/delete/${pageId}`;
+            window.location.href = `/dashboard/pages/delete/${pageId}`;
         }
     }
 

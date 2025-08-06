@@ -56,7 +56,7 @@ class CategoryController
         Category::store($name, $slug, $description, $parentId);
 
         $_SESSION['success'] = "Category '{$name}' created successfully!";
-        header("Location: /admin/categories");
+        header("Location: /dashboard/categories");
         exit;
     }
 
@@ -70,7 +70,7 @@ class CategoryController
         $category = Category::find($id);
         if (!$category) {
             $_SESSION['error'] = "Category not found!";
-            header("Location: /admin/categories");
+            header("Location: /dashboard/categories");
             exit;
         }
 
@@ -99,14 +99,14 @@ class CategoryController
         // Prevent circular references
         if ($parentId && $this->wouldCreateCircularReference($id, $parentId)) {
             $_SESSION['error'] = "Cannot set parent category - this would create a circular reference!";
-            header("Location: /admin/categories/edit/{$id}");
+            header("Location: /dashboard/categories/edit/{$id}");
             exit;
         }
 
         Category::updateCategory($id, $name, $slug, $description, $parentId);
 
         $_SESSION['success'] = "Category '{$name}' updated successfully!";
-        header("Location: /admin/categories");
+        header("Location: /dashboard/categories");
         exit;
     }
 
@@ -120,7 +120,7 @@ class CategoryController
         $category = Category::find($id);
         if (!$category) {
             $_SESSION['error'] = "Category not found!";
-            header("Location: /admin/categories");
+            header("Location: /dashboard/categories");
             exit;
         }
 
@@ -131,7 +131,7 @@ class CategoryController
 
         Category::deleteCategory($id);
         $_SESSION['success'] = "Category '{$category['name']}' deleted successfully!";
-        header("Location: /admin/categories");
+        header("Location: /dashboard/categories");
         exit;
     }
 
