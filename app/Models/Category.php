@@ -388,4 +388,86 @@ class Category
         $stmt->execute([$searchTerm, $searchTerm, $limit]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Get child categories with their first image preview for parent category display
+     */
+    public static function getChildrenWithFirstImage($parentId)
+    {
+        $db = Database::getInstance();
+
+        $sql = "SELECT 
+                c.id,
+                c.name,
+                c.slug,
+                c.description,
+                c.level,
+                c.sort_order,
+                COUNT(DISTINCT i.id) as image_count,
+                (
+                    SELECT i2.preview 
+                    FROM images i2 
+                    WHERE i2.category_id = c.id 
+                    AND i2.preview IS NOT NULL 
+                    AND i2.preview != '' 
+                    ORDER BY i2.created_at DESC 
+                    LIMIT 1
+                ) as first_image_preview,
+                (
+                    SELECT i3.title 
+                    FROM images i3 
+                    WHERE i3.category_id = c.id 
+                    ORDER BY i3.created_at DESC 
+                    LIMIT 1
+                ) as first_image_title
+            FROM categories c
+            LEFT JOIN images i ON c.id = i.category_id
+            WHERE c.parent_id = ?
+            GROUP BY c.id, c.name, c.slug, c.description, c.level, c.sort_order
+            ORDER BY c.sort_order ASC, c.name ASC";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$parentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Alternative method if you want to get the most popular/downloaded image instead of the newest
+    public static function getChildrenWithPopularImage($parentId)
+    {
+        $db = Database::getInstance();
+
+        $sql = "SELECT 
+                c.id,
+                c.name,
+                c.slug,
+                c.description,
+                c.level,
+                c.sort_order,
+                COUNT(DISTINCT i.id) as image_count,
+                (
+                    SELECT i2.preview 
+                    FROM images i2 
+                    WHERE i2.category_id = c.id 
+                    AND i2.preview IS NOT NULL 
+                    AND i2.preview != '' 
+                    ORDER BY i2.downloads DESC, i2.created_at DESC 
+                    LIMIT 1
+                ) as first_image_preview,
+                (
+                    SELECT i3.title 
+                    FROM images i3 
+                    WHERE i3.category_id = c.id 
+                    ORDER BY i3.downloads DESC, i3.created_at DESC 
+                    LIMIT 1
+                ) as first_image_title
+            FROM categories c
+            LEFT JOIN images i ON c.id = i.category_id
+            WHERE c.parent_id = ?
+            GROUP BY c.id, c.name, c.slug, c.description, c.level, c.sort_order
+            ORDER BY c.sort_order ASC, c.name ASC";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$parentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

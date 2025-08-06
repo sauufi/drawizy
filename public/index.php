@@ -65,6 +65,7 @@ $router->add('POST', '/dashboard/images/multiple', [ImageController::class, 'sto
 $router->add('GET', '/dashboard/images/edit/{id}', [ImageController::class, 'edit'], [Role::class, 'editorOrAdmin']);
 $router->add('POST', '/dashboard/images/update/{id}', [ImageController::class, 'update'], [Role::class, 'editorOrAdmin']);
 $router->add('GET', '/dashboard/images/check-slug', [ImageController::class, 'checkSlug'], [Role::class, 'editorOrAdmin']);
+$router->add('GET', '/dashboard/images/delete/{id}', [ImageController::class, 'delete'], [Role::class, 'editorOrAdmin']);
 
 $router->add('GET', '/dashboard', [DashboardController::class, 'index'], [Auth::class, 'handle']);
 $router->add('GET', '/dashboard/change-password', [AuthController::class, 'showChangePassword'], [Auth::class, 'handle']);

@@ -73,16 +73,55 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
             <?php foreach ($relatedCategories as $child): ?>
-                <a href="/category/<?= $child['slug'] ?>" class="group bg-white shadow-lg rounded-2xl p-4 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-4 border-transparent hover:border-pink-200">
-                    <div class="text-4xl mb-2 group-hover:animate-bounce"><?= getChildCategoryEmoji($child['name']) ?></div>
-                    <h3 class="font-bold text-gray-700 group-hover:text-purple-600 transition-colors text-sm md:text-base mb-1">
-                        <?= htmlspecialchars($child['name']) ?>
-                    </h3>
-                    <p class="text-xs text-gray-500 mb-2"><?= $child['image_count'] ?> images</p>
-                    <div class="opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <span class="inline-block bg-gradient-to-r from-pink-400 to-purple-400 text-white text-xs px-3 py-1 rounded-full font-bold">
-                            Explore! 🚀
-                        </span>
+                <a href="/category/<?= $child['slug'] ?>" class="group bg-white shadow-lg rounded-2xl p-4 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-4 border-transparent hover:border-pink-200 subcategory-card">
+
+                    <!-- Image Preview Section -->
+                    <div class="relative w-full h-32 md:h-40 mb-3 rounded-xl overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50">
+                        <?php if (!empty($child['first_image_preview'])): ?>
+                            <!-- Actual first image from category -->
+                            <img src="/uploads/<?= $child['first_image_preview'] ?>"
+                                alt="<?= htmlspecialchars($child['name']) ?> preview"
+                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 category-preview-img">
+
+                            <!-- Hover overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+
+                            <!-- Preview badge -->
+                            <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs font-bold text-purple-600 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                Preview
+                            </div>
+                        <?php else: ?>
+                            <!-- Fallback when no images available -->
+                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                                <div class="text-center">
+                                    <div class="text-4xl mb-2 group-hover:animate-bounce"><?= getChildCategoryEmoji($child['name']) ?></div>
+                                    <div class="text-xs text-gray-500 font-semibold">Coming Soon!</div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Decorative elements that appear on hover -->
+                        <div class="absolute top-2 left-2 text-xl opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse">✨</div>
+                        <div class="absolute bottom-2 right-2 text-lg opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce" style="animation-delay: 0.2s;">🎨</div>
+                    </div>
+
+                    <!-- Category Info -->
+                    <div class="space-y-2">
+                        <h3 class="font-bold text-gray-700 group-hover:text-purple-600 transition-colors text-sm md:text-base">
+                            <?= htmlspecialchars($child['name']) ?>
+                        </h3>
+
+                        <p class="text-xs text-gray-500">
+                            <?= $child['image_count'] ?>
+                            <?= $child['image_count'] == 1 ? 'image' : 'images' ?>
+                        </p>
+
+                        <!-- Action button that appears on hover -->
+                        <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <span class="inline-block bg-gradient-to-r from-pink-400 to-purple-400 text-white text-xs px-3 py-1 rounded-full font-bold">
+                                Explore! 🚀
+                            </span>
+                        </div>
                     </div>
                 </a>
             <?php endforeach; ?>
@@ -352,7 +391,36 @@
         }
     }
 
-    /* Custom gradient border animation */
+    /* Enhanced hover effects for subcategory cards */
+    .group:hover .category-preview-img {
+        transform: scale(1.1);
+        filter: brightness(1.1) saturate(1.2);
+    }
+
+    /* Smooth loading effect for images */
+    .category-preview-img {
+        transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        background-color: #f3f4f6;
+    }
+
+    /* Loading placeholder animation */
+    @keyframes shimmer {
+        0% {
+            background-position: -200px 0;
+        }
+
+        100% {
+            background-position: calc(200px + 100%) 0;
+        }
+    }
+
+    .loading-shimmer {
+        background: linear-gradient(90deg, #f0f0f0 0px, #e0e0e0 40px, #f0f0f0 80px);
+        background-size: 200px;
+        animation: shimmer 1.5s infinite;
+    }
+
+    /* Gradient border animation for hover state */
     @keyframes gradient-border {
         0% {
             border-image-source: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
@@ -373,6 +441,58 @@
         100% {
             border-image-source: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
         }
+    }
+
+    /* Enhanced subcategory card hover effects */
+    .subcategory-card {
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .subcategory-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Image aspect ratio container */
+    .aspect-ratio-container {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 75%;
+        /* 4:3 aspect ratio */
+        overflow: hidden;
+        border-radius: 0.75rem;
+    }
+
+    .aspect-ratio-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Enhanced subcategory card hover effects */
+    .subcategory-card {
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .subcategory-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Enhanced hover effects for subcategory cards */
+    .group:hover .category-preview-img {
+        transform: scale(1.1);
+        filter: brightness(1.1) saturate(1.2);
+    }
+
+    /* Smooth loading effect for images */
+    .category-preview-img {
+        transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        background-color: #f3f4f6;
     }
 </style>
 

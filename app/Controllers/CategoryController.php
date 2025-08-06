@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Setting;
 use App\Core\View;
 
@@ -191,30 +192,74 @@ class CategoryController
         $offset = ($page - 1) * $perPage;
 
         // Build query conditions
-        $conditions = ["category_id = ?"];
-        $params = [$category['id']];
+        if ($category['level'] == 0) {
+            // Parent category - get images from this category AND all child categories
+            $conditions = ["(c.id = ? OR c.parent_id = ?)"];
+            $params = [$category['id'], $category['id']];
 
-        if ($search) {
-            $conditions[] = "title LIKE ?";
-            $params[] = "%$search%";
+            if ($search) {
+                $conditions[] = "i.title LIKE ?";
+                $params[] = "%$search%";
+            }
+
+            $whereClause = "WHERE " . implode(" AND ", $conditions);
+
+            // Get total count for parent category
+            $stmt = $db->prepare("SELECT COUNT(DISTINCT i.id) as total 
+                                FROM images i 
+                                LEFT JOIN categories c ON i.category_id = c.id 
+                                {$whereClause}");
+            $stmt->execute($params);
+            $total = $stmt->fetch()['total'];
+            $totalPages = ceil($total / $perPage);
+
+            // Get images for current page
+            $sql = "SELECT i.*, 
+                           c.name as category_name,
+                           c.slug as category_slug,
+                           p.name as parent_category_name,
+                           p.slug as parent_category_slug
+                    FROM images i 
+                    LEFT JOIN categories c ON i.category_id = c.id
+                    LEFT JOIN categories p ON c.parent_id = p.id
+                    {$whereClause}
+                    ORDER BY i.created_at DESC 
+                    LIMIT {$perPage} OFFSET {$offset}";
+        } else {
+            // Child category - get images only from this category
+            $conditions = ["category_id = ?"];
+            $params = [$category['id']];
+
+            if ($search) {
+                $conditions[] = "title LIKE ?";
+                $params[] = "%$search%";
+            }
+
+            $whereClause = "WHERE " . implode(" AND ", $conditions);
+
+            // Get total count
+            $stmt = $db->prepare("SELECT COUNT(*) as total FROM images {$whereClause}");
+            $stmt->execute($params);
+            $total = $stmt->fetch()['total'];
+            $totalPages = ceil($total / $perPage);
+
+            // Get images for current page
+            $sql = "SELECT * FROM images {$whereClause} ORDER BY created_at DESC LIMIT {$perPage} OFFSET {$offset}";
         }
 
-        $whereClause = "WHERE " . implode(" AND ", $conditions);
-
-        // Get total count
-        $stmt = $db->prepare("SELECT COUNT(*) as total FROM images {$whereClause}");
-        $stmt->execute($params);
-        $total = $stmt->fetch()['total'];
-        $totalPages = ceil($total / $perPage);
-
-        // Get images for current page
-        $sql = "SELECT * FROM images {$whereClause} ORDER BY created_at DESC LIMIT {$perPage} OFFSET {$offset}";
         $stmt = $db->prepare($sql);
         $stmt->execute($params);
         $images = $stmt->fetchAll();
 
-        // Get related categories (siblings if child category, children if parent category)
-        $relatedCategories = $this->getRelatedCategories($category);
+        // Get related categories with first images for parent categories
+        $relatedCategories = [];
+        if ($category['level'] == 0) {
+            // For parent categories, get child categories WITH their first images
+            $relatedCategories = Category::getChildrenWithFirstImage($category['id']);
+        } else {
+            // For child categories, get sibling categories
+            $relatedCategories = Category::getChildren($category['parent_id']);
+        }
 
         // Get breadcrumb
         $breadcrumb = Category::getBreadcrumb($category['id']);
@@ -227,7 +272,7 @@ class CategoryController
             'totalPages' => $totalPages,
             'meta_title' => $meta_title,
             'meta_description' => $meta_description,
-            'relatedCategories' => $relatedCategories,
+            'relatedCategories' => $relatedCategories, // Now includes first_image_preview for parent categories
             'breadcrumb' => $breadcrumb
         ], 'layouts/frontend.php');
     }
@@ -321,20 +366,6 @@ class CategoryController
         }
 
         return false;
-    }
-
-    /**
-     * Get related categories for sidebar/suggestions
-     */
-    private function getRelatedCategories($category)
-    {
-        if ($category['level'] == 0) {
-            // For parent categories, get child categories
-            return Category::getChildren($category['id']);
-        } else {
-            // For child categories, get sibling categories
-            return Category::getChildren($category['parent_id']);
-        }
     }
 
     /**

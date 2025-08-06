@@ -87,7 +87,7 @@
             <div>
                 <h2 class="text-2xl font-kids text-purple-700 mb-4">🎯 What Makes Us Special?</h2>
                 <p class="text-gray-700 leading-relaxed font-semibold">
-                    At <span class="text-purple-600 font-bold">ColoringPagesOnly.com</span>, we create a magical world where creativity comes alive!
+                    At <span class="text-purple-600 font-bold">Drawizy.com</span>, we create a magical world where creativity comes alive!
                     With thousands of free coloring pages featuring <span class="text-pink-600 font-bold">Animals 🦁, Disney Characters 🏰, Holidays 🎃, Cartoons 🚗, Movies 🎬, and Games 🎮</span>,
                     every child can find their perfect coloring adventure!
                 </p>
