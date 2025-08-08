@@ -79,7 +79,7 @@
                     <div class="relative w-full h-32 md:h-40 mb-3 rounded-xl overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50">
                         <?php if (!empty($child['first_image_preview'])): ?>
                             <!-- Actual first image from category -->
-                            <img src="/uploads/<?= $child['first_image_preview'] ?>"
+                            <img src="<?= img_url($child['first_image_preview'], "small") ?>"
                                 alt="<?= htmlspecialchars($child['name']) ?> preview"
                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 category-preview-img">
 
