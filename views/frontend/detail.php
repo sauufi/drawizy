@@ -57,7 +57,7 @@
                     <div class="relative inline-block mb-6">
                         <div class="absolute inset-0 bg-gradient-to-r from-pink-300 to-purple-300 rounded-2xl transform rotate-1"></div>
                         <div class="relative bg-white p-4 rounded-2xl shadow-lg">
-                            <img src="/uploads/<?= $image['preview'] ?>"
+                            <img src="<?= img_url($image["preview"], "medium") ?>"
                                 class="mx-auto max-w-full h-auto rounded-xl"
                                 alt="<?= htmlspecialchars($image['title']) ?>">
                         </div>
@@ -80,7 +80,7 @@
                                 <span>📄 Download PDF</span>
                             </a>
 
-                            <a href="/coloring/coloring.html?image=/uploads/<?= urlencode($image['preview']) ?>"
+                            <a href="/coloring/coloring.html?image=<?= img_url($image["preview"], "large") ?>"
                                 target="_blank"
                                 class="group bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center space-x-2">
                                 <svg class="w-5 h-5 group-hover:animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">

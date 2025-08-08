@@ -1205,6 +1205,7 @@ function getCategoryEmoji($name)
                 } catch (error) {
                     showMessage('❌ Upload failed: ' + error.message, 'error');
                     resetUploadState();
+
                 }
             } else {
                 showMessage('❌ Upload failed! Please try again.', 'error');

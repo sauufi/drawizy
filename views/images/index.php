@@ -148,7 +148,7 @@
     </div>
 
     <!-- Table View -->
-    <div id="tableView" class="overflow-x-auto">
+    <div id="tableView" class="overflow-x-hidden">
         <table class="w-full">
             <thead class="bg-gray-50 border-b-2 border-pink-200">
                 <tr>
@@ -197,12 +197,12 @@
                         <td class="p-4">
                             <div class="relative group">
                                 <div class="w-20 h-20 rounded-xl overflow-hidden shadow-md border-2 border-gray-200 group-hover:border-pink-300 transition-all">
-                                    <img src="/uploads/<?= $img['preview'] ?>"
+                                    <img src="<?= img_url($img["preview"], "tiny") ?>"
                                         alt="<?= htmlspecialchars($img['title']) ?>"
                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                                 </div>
                                 <!-- Hover overlay -->
-                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-xl flex items-center justify-center">
+                                <div class="w-20 h-20 absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-xl flex items-center justify-center">
                                     <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                 </div>
                             </div>
@@ -294,6 +294,121 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination Controls for Table View -->
+    <?php if ($totalPages > 1): ?>
+        <div class="mt-8 p-4 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <!-- Results Info -->
+            <div class="text-sm text-gray-600">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-info-circle text-blue-500"></i>
+                    <span>
+                        Showing <?= (($currentPage - 1) * $perPage) + 1 ?> to
+                        <?= min($currentPage * $perPage, $total) ?> of
+                        <strong class="text-gray-800"><?= number_format($total) ?></strong> images
+                    </span>
+                </div>
+            </div>
+
+            <!-- Pagination Links -->
+            <div class="flex items-center space-x-2">
+                <!-- Previous Page -->
+                <?php if ($currentPage > 1): ?>
+                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage - 1])) ?>"
+                        class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex items-center space-x-2 text-gray-700 hover:text-gray-900">
+                        <i class="fas fa-chevron-left"></i>
+                        <span class="hidden sm:inline">Previous</span>
+                    </a>
+                <?php else: ?>
+                    <span class="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-400 cursor-not-allowed flex items-center space-x-2">
+                        <i class="fas fa-chevron-left"></i>
+                        <span class="hidden sm:inline">Previous</span>
+                    </span>
+                <?php endif; ?>
+
+                <!-- Page Numbers -->
+                <div class="flex items-center space-x-1">
+                    <?php
+                    $startPage = max(1, $currentPage - 2);
+                    $endPage = min($totalPages, $currentPage + 2);
+
+                    // Always show first page
+                    if ($startPage > 1):
+                    ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => 1])) ?>"
+                            class="px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-700 hover:text-gray-900">
+                            1
+                        </a>
+                        <?php if ($startPage > 2): ?>
+                            <span class="px-2 py-2 text-gray-400">...</span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <!-- Current page range -->
+                    <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                        <?php if ($i == $currentPage): ?>
+                            <span class="px-3 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg font-semibold shadow-lg">
+                                <?= $i ?>
+                            </span>
+                        <?php else: ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                                class="px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-700 hover:text-gray-900">
+                                <?= $i ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php endfor; ?>
+
+                    <!-- Always show last page -->
+                    <?php if ($endPage < $totalPages): ?>
+                        <?php if ($endPage < $totalPages - 1): ?>
+                            <span class="px-2 py-2 text-gray-400">...</span>
+                        <?php endif; ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $totalPages])) ?>"
+                            class="px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-700 hover:text-gray-900">
+                            <?= $totalPages ?>
+                        </a>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Next Page -->
+                <?php if ($currentPage < $totalPages): ?>
+                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $currentPage + 1])) ?>"
+                        class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex items-center space-x-2 text-gray-700 hover:text-gray-900">
+                        <span class="hidden sm:inline">Next</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                <?php else: ?>
+                    <span class="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-400 cursor-not-allowed flex items-center space-x-2">
+                        <span class="hidden sm:inline">Next</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </span>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Items per page selector (Optional) -->
+    <div class="mt-4 p-4 flex justify-center">
+        <div class="flex items-center space-x-2 text-sm text-gray-600">
+            <span>Items per page:</span>
+            <select onchange="changePerPage(this.value)"
+                class="border border-gray-300 rounded px-3 py-1 text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                <option value="10" <?= $perPage == 10 ? 'selected' : '' ?>>10</option>
+                <option value="20" <?= $perPage == 20 ? 'selected' : '' ?>>20</option>
+                <option value="50" <?= $perPage == 50 ? 'selected' : '' ?>>50</option>
+                <option value="100" <?= $perPage == 100 ? 'selected' : '' ?>>100</option>
+            </select>
+        </div>
+    </div>
+
+    <script>
+        function changePerPage(perPage) {
+            const url = new URL(window.location);
+            url.searchParams.set('per_page', perPage);
+            url.searchParams.set('page', 1); // Reset to first page
+            window.location.href = url.toString();
+        }
+    </script>
 
     <!-- Grid View (Hidden by default) -->
     <div id="gridView" class="hidden p-6">

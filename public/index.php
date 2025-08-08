@@ -12,6 +12,7 @@ spl_autoload_register(function ($class) {
 });
 
 require_once __DIR__ . '/../app/Helpers.php';
+require_once __DIR__ . '/../app/ImageHelper.php';
 
 use App\Core\Router;
 use App\Controllers\AuthController;

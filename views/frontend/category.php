@@ -201,7 +201,7 @@
     <?php foreach ($images as $img): ?>
         <a href="/image/<?= $img['slug'] ?>" class="group bg-white shadow-lg rounded-2xl p-4 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-3 border-4 border-transparent hover:border-gradient-to-r hover:from-pink-200 hover:to-purple-200">
             <div class="relative overflow-hidden rounded-xl mb-3">
-                <img src="/uploads/<?= $img['preview'] ?>" class="mx-auto transition-transform duration-300 group-hover:scale-110 w-full h-auto" alt="<?= htmlspecialchars($img['title']) ?>">
+                <img src="<?= img_url($img["preview"], "small") ?>" class="mx-auto transition-transform duration-300 group-hover:scale-110 w-full h-auto" alt="<?= htmlspecialchars($img['title']) ?>">
 
                 <!-- Overlay gradient on hover -->
                 <div class="absolute inset-0 bg-gradient-to-t from-purple-200/0 to-pink-200/0 group-hover:from-purple-200/20 group-hover:to-pink-200/20 transition-all duration-300 rounded-xl"></div>
